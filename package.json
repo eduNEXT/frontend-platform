@@ -27,6 +27,10 @@
   "bugs": {
     "url": "https://github.com/davidjoy/frontend-platform/issues"
   },
+  "bin": {
+    "transifex-utils.js": "dist/i18n/scripts/transifex-utils.js",
+    "transifex-Makefile": "dist/i18n/scripts/Makefile"
+  },
   "homepage": "https://github.com/davidjoy/frontend-platform#readme",
   "devDependencies": {
     "@commitlint/cli": "8.2.0",
