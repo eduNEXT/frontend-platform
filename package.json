@@ -2,23 +2,21 @@
   "name": "@edx/frontend-platform",
   "version": "1.0.0-semantically-released",
   "description": "Foundational application framework for Open edX micro-frontend applications.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "publishConfig": {
     "access": "public"
   },
   "sideEffects": false,
+  "files": ["dist/*"],
   "scripts": {
     "build": "make build",
+    "prepare": "npm run build",
     "docs": "jsdoc -c jsdoc.json",
     "docs-watch": "nodemon -w src -w docs/template -w README.md -e js,jsx --exec npm run docs",
     "lint": "fedx-scripts eslint --ext .js --ext .jsx .",
     "snapshot": "fedx-scripts jest --updateSnapshot",
     "start": "fedx-scripts webpack-dev-server --progress",
     "test": "fedx-scripts jest --coverage"
-  },
-  "bin": {
-    "transifex-utils.js": "i18n/scripts/transifex-utils.js",
-    "transifex-Makefile": "i18n/scripts/Makefile"
   },
   "repository": {
     "type": "git",
