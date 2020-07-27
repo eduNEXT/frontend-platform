@@ -307,6 +307,7 @@ export async function initialize({
   } catch (error) {
     if (!error.isRedirecting) {
       // Initialization Error
+      console.log(error);
       await handlers.initError(error);
       publish(APP_INIT_ERROR, error);
     }
