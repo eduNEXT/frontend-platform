@@ -2,7 +2,7 @@
   "name": "@edx/frontend-platform",
   "version": "1.0.0-semantically-released",
   "description": "Foundational application framework for Open edX micro-frontend applications.",
-  "main": "dist/index.js",
+  "main": "index.js",
   "publishConfig": {
     "access": "public"
   },
@@ -10,7 +10,6 @@
   "files": ["dist/*"],
   "scripts": {
     "build": "make build",
-    "prepare": "npm run build",
     "docs": "jsdoc -c jsdoc.json",
     "docs-watch": "nodemon -w src -w docs/template -w README.md -e js,jsx --exec npm run docs",
     "lint": "fedx-scripts eslint --ext .js --ext .jsx .",
@@ -28,8 +27,8 @@
     "url": "https://github.com/davidjoy/frontend-platform/issues"
   },
   "bin": {
-    "transifex-utils.js": "dist/i18n/scripts/transifex-utils.js",
-    "transifex-Makefile": "dist/i18n/scripts/Makefile"
+    "transifex-utils.js": "i18n/scripts/transifex-utils.js",
+    "transifex-Makefile": "i18n/scripts/Makefile"
   },
   "homepage": "https://github.com/davidjoy/frontend-platform#readme",
   "devDependencies": {
