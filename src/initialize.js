@@ -146,6 +146,7 @@ export async function runtimeConfig() {
 
       const params = new URLSearchParams();
       params.append('mfe', APP_ID);
+      params.append('site', window.location.hostname);
       const url = `${MFE_CONFIG_API_URL}?${params.toString()}`;
 
       const { data } = await apiService.get(url, apiConfig);
