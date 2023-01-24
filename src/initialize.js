@@ -79,6 +79,7 @@ import {
   APP_READY, APP_INIT_ERROR,
 } from './constants';
 import configureCache from './auth/LocalForageCache';
+import { generateAPIConfigUrl } from './utils';
 
 /**
  * A browser history or memory history object created by the [history](https://github.com/ReactTraining/history)
@@ -138,16 +139,11 @@ export async function auth(requireUser, hydrateUser) {
 
 export async function runtimeConfig() {
   try {
-    const { MFE_CONFIG_API_URL, APP_ID } = getConfig();
+    const url = generateAPIConfigUrl();
 
-    if (MFE_CONFIG_API_URL) {
+    if (url) {
       const apiConfig = { headers: { accept: 'application/json' } };
       const apiService = await configureCache();
-
-      const params = new URLSearchParams();
-      params.append('mfe', APP_ID);
-      const url = `${MFE_CONFIG_API_URL}?${params.toString()}`;
-
       const { data } = await apiService.get(url, apiConfig);
       mergeConfig(data);
     }
