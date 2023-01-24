@@ -31,12 +31,14 @@ import { configure as configureAnalytics, SegmentAnalyticsService } from './anal
 import { configure as configureI18n } from './i18n';
 import { getConfig } from './config';
 import configureCache from './auth/LocalForageCache';
+import { generateAPIConfigUrl } from './utils';
 
 jest.mock('./logging');
 jest.mock('./auth');
 jest.mock('./analytics');
 jest.mock('./i18n');
 jest.mock('./auth/LocalForageCache');
+jest.mock('./utils');
 
 let config = null;
 const newConfig = {
@@ -279,8 +281,7 @@ describe('initialize', () => {
   });
 
   it('should initialize the app with runtime configuration', async () => {
-    config.MFE_CONFIG_API_URL = 'http://localhost:18000/api/mfe/v1/config';
-    config.APP_ID = 'auth';
+    generateAPIConfigUrl.mockReturnValueOnce('http://localhost:18000/api/mfe/v1/config?mfe=auth');
     configureCache.mockReturnValueOnce(Promise.resolve({
       get: (url) => {
         const params = new URL(url).search;
@@ -319,8 +320,7 @@ describe('initialize', () => {
   });
 
   it('should initialize the app with the build config when runtime configuration fails', async () => {
-    config.MFE_CONFIG_API_URL = 'http://localhost:18000/api/mfe/v1/config';
-    // eslint-disable-next-line no-console
+    generateAPIConfigUrl.mockReturnValueOnce('http://localhost:18000/api/mfe/v1/config?mfe=auth');
     console.error = jest.fn();
     configureCache.mockReturnValueOnce(Promise.reject(new Error('Api fails')));
 

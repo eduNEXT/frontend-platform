@@ -5,6 +5,7 @@ export {
   convertKeyNames,
   getQueryParameters,
   ensureDefinedConfig,
+  generateAPIConfigUrl,
 } from './utils';
 export {
   APP_TOPIC,

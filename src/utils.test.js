@@ -4,7 +4,11 @@ import {
   snakeCaseObject,
   convertKeyNames,
   getQueryParameters,
+  getConfig,
+  generateAPIConfigUrl,
 } from '.';
+
+let config = null;
 
 describe('modifyObjectKeys', () => {
   it('should use the provided modify function to change all keys in and object and its children', () => {
@@ -111,5 +115,54 @@ describe('getQueryParameters', () => {
       foo: 'bar',
       baz: '1',
     });
+  });
+});
+
+describe('generateAPIConfigUrl', () => {
+  beforeEach(() => {
+    config = getConfig();
+    delete window.location;
+    window.location = new URL('https://apps.testing.example.com');
+  });
+
+  it('should not set mfe configuration', () => {
+    expect(generateAPIConfigUrl()).toEqual(null);
+  });
+
+  it('shopuld not match url with mfe config api regex', () => {
+    config.MFE_CONFIG_API_PATH = 'api/mfe/v1/config';
+    config.MFE_CONFIG_API_REGEX = 'https://invalid-regex.com';
+
+    expect(generateAPIConfigUrl()).toEqual(null);
+  });
+
+  it('should match without APP_ID mfe config api regex and url', () => {
+    config.MFE_CONFIG_API_PATH = 'api/mfe/v1/config';
+    config.MFE_CONFIG_API_REGEX = '\\b(?!apps)\\w+';
+
+    expect(generateAPIConfigUrl()).toEqual(
+      'https://testing.example.com/api/mfe/v1/config',
+    );
+  });
+
+  it('should match with port mfe config api regex and url', () => {
+    config.MFE_CONFIG_API_PATH = 'api/mfe/v1/config';
+    config.MFE_CONFIG_API_REGEX = '\\b(?!apps)\\w+';
+    config.MFE_CONFIG_API_PORT = 8000;
+
+    expect(generateAPIConfigUrl()).toEqual(
+      'https://testing.example.com:8000/api/mfe/v1/config',
+    );
+  });
+
+  it('should match with APP_ID mfe config api regex and url', () => {
+    config.MFE_CONFIG_API_PATH = 'api/mfe/v1/config';
+    config.MFE_CONFIG_API_REGEX = '\\b(?!apps)\\w+';
+    config.MFE_CONFIG_API_PORT = null;
+    config.APP_ID = 'auth';
+
+    expect(generateAPIConfigUrl()).toEqual(
+      'https://testing.example.com/api/mfe/v1/config?mfe=auth',
+    );
   });
 });

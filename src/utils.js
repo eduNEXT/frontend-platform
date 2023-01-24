@@ -5,6 +5,7 @@
  */
 import camelCase from 'lodash.camelcase';
 import snakeCase from 'lodash.snakecase';
+import { getConfig } from './config';
 
 /**
  * This is the underlying function used by camelCaseObject, snakeCaseObject, and convertKeyNames
@@ -164,4 +165,43 @@ export function ensureDefinedConfig(object, requester) {
       console.warn(`Module configuration error: ${key} is required by ${requester}.`);
     }
   });
+}
+
+/**
+ * This function generates and returns the API config url based on the following environment variables:
+ *
+ *  MFE_CONFIG_API_PATH: API config path, this must not include the domain.
+ *  MFE_CONFIG_API_PORT(Optional): Specify the port, useful in development environments
+ *  MFE_CONFIG_API_REGEX: This regex will be used to generate the config domain based on the current domain.
+ *  APP_ID(Optional): This value makes reference to specific settings for a MFE.
+ *
+ * @returns {string}
+ */
+export function generateAPIConfigUrl() {
+  const {
+    APP_ID,
+    MFE_CONFIG_API_PATH,
+    MFE_CONFIG_API_PORT,
+    MFE_CONFIG_API_REGEX,
+  } = getConfig();
+
+  if (!MFE_CONFIG_API_PATH || !MFE_CONFIG_API_REGEX) {
+    return null;
+  }
+
+  const regex = new RegExp(MFE_CONFIG_API_REGEX, 'g');
+  const host = (window.location.hostname.match(regex) || []).join('.');
+
+  if (!host) {
+    return null;
+  }
+
+  const params = new URLSearchParams();
+  params.append('mfe', APP_ID);
+  const queryParams = APP_ID ? `?${params.toString()}` : '';
+
+  const url = new URL(`${window.location.protocol}//${host}/${MFE_CONFIG_API_PATH}${queryParams}`);
+  url.port = MFE_CONFIG_API_PORT;
+
+  return url.toString();
 }
