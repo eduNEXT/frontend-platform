@@ -4,6 +4,7 @@ import {
   snakeCaseObject,
   convertKeyNames,
   getQueryParameters,
+  mix,
 } from '.';
 
 describe('modifyObjectKeys', () => {
@@ -111,5 +112,23 @@ describe('getQueryParameters', () => {
       foo: 'bar',
       baz: '1',
     });
+  });
+});
+
+describe('mix', () => {
+  it('should return rigth value', () => {
+    const expected = '#546e88'; // This value was calculated in https://sass.js.org/ by using sass mix function
+
+    expect(mix('#FFFFFF', '#0A3055', 30)).toBe(expected);
+  });
+
+  it('should thow error', () => {
+    expect(() => mix('#FFFFFF', '#0A3')).toThrow('Parameter color does not have format #RRGGBB');
+  });
+
+  it('should return rigth value without hash symbol on parameters', () => {
+    const expected = '#8598aa'; // This value was calculated in https://sass.js.org/ by using sass mix function
+
+    expect(mix('FFFFFF', '0A3055')).toBe(expected);
   });
 });

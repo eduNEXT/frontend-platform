@@ -72,6 +72,7 @@ let config = {
   MFE_CONFIG_API_URL: process.env.MFE_CONFIG_API_URL,
   APP_ID: process.env.APP_ID,
   SUPPORT_URL: process.env.SUPPORT_URL,
+  CUSTOM_PRIMARY_COLORS: process.env.CUSTOM_PRIMARY_COLORS || {},
 };
 
 /**
@@ -203,4 +204,5 @@ export function ensureConfig(keys, requester = 'unspecified application code') {
  * @property {string} MFE_CONFIG_API_URL
  * @property {string} APP_ID
  * @property {string} SUPPORT_URL
+ * @property {string} CUSTOM_PRIMARY_COLORS
  */

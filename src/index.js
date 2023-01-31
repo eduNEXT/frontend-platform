@@ -5,6 +5,7 @@ export {
   convertKeyNames,
   getQueryParameters,
   ensureDefinedConfig,
+  mix,
 } from './utils';
 export {
   APP_TOPIC,
