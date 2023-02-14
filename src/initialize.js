@@ -77,8 +77,10 @@ import {
   APP_LOGGING_INITIALIZED,
   APP_ANALYTICS_INITIALIZED,
   APP_READY, APP_INIT_ERROR,
+  PRIMARY_COLOR_DEFINITIONS,
 } from './constants';
 import configureCache from './auth/LocalForageCache';
+import { mix } from './utils';
 
 /**
  * A browser history or memory history object created by the [history](https://github.com/ReactTraining/history)
@@ -155,6 +157,41 @@ export async function runtimeConfig() {
     // eslint-disable-next-line no-console
     console.error('Error with config API', error.message);
   }
+}
+
+/*
+ * Set custom colors based on the config content.
+ * This method allows to change primary colors and its levels on runtime,
+ * if a specific level is already in the configuration that level will have
+ * priority otherwise the level will be calculated based on primary color by
+ * using the mix function.
+ */
+export function setCustomPrimaryColors() {
+  const { CUSTOM_PRIMARY_COLORS } = getConfig();
+  const primary = CUSTOM_PRIMARY_COLORS['pgn-color-primary-base'];
+
+  if (!primary) {
+    return;
+  }
+  document.documentElement.style.setProperty('--pgn-color-primary-base', primary);
+
+  Object.keys(PRIMARY_COLOR_DEFINITIONS).forEach((key) => {
+    let color;
+
+    if (key in CUSTOM_PRIMARY_COLORS) {
+      color = CUSTOM_PRIMARY_COLORS[key];
+    } else {
+      try {
+        const [base, weight] = Object.entries(PRIMARY_COLOR_DEFINITIONS[key])[0];
+
+        color = mix(base, primary, weight);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error setting custom colors', error.message);
+      }
+    }
+    document.documentElement.style.setProperty('--'.concat(key), color);
+  });
 }
 
 /**
@@ -254,6 +291,7 @@ export async function initialize({
     // Configuration
     await handlers.config();
     await runtimeConfig();
+    setCustomPrimaryColors();
     publish(APP_CONFIG_INITIALIZED);
 
     // Logging

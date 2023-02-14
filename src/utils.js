@@ -165,3 +165,37 @@ export function ensureDefinedConfig(object, requester) {
     }
   });
 }
+
+/**
+ * This function is the javascript version of SASS mix() function,
+ * https://sass-lang.com/documentation/modules/color#mix
+ *
+ * @param {string} First color in hexadecimal.
+ * @param {string} Second color in hexadecimal.
+ * @param {number} Relative opacity of each color.
+ * @returns {string} Returns a color that’s a mixture of color1 and color2.
+ */
+export function mix(color1, color2, weight = 50) {
+  let color = '#';
+
+  function d2h(d) { return d.toString(16); } // convert a decimal value to hex
+  function h2d(h) { return parseInt(h, 16); } // convert a hex value to decimal
+
+  if (color1.length < 6 || color2.length < 6) {
+    throw new Error('Parameter color does not have format #RRGGBB');
+  }
+
+  for (let i = 0; i <= 5; i += 2) { // loop through each of the 3 hex pairs—red, green, and blue
+    const v1 = h2d(color1.replace('#', '').substr(i, 2));
+    const v2 = h2d(color2.replace('#', '').substr(i, 2));
+    let val = d2h(Math.round(v2 + (v1 - v2) * (weight / 100.0)));
+
+    while (val.length < 2) {
+      val = '0'.concat(val);
+    }
+
+    color += val;
+  }
+
+  return color;
+}
