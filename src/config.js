@@ -173,7 +173,6 @@ let config = {
   SUPPORT_URL: process.env.SUPPORT_URL,
   APP_THEME_CORE_URL: process.env.APP_THEME_CORE_URL,
   APP_THEME_LIGHT_URL: process.env.APP_THEME_LIGHT_URL,
-  APP_THEME_DARK_URL: process.env.APP_THEME_DARK_URL,
 };
 
 /**
@@ -327,5 +326,6 @@ export function ensureConfig(keys, requester = 'unspecified application code') {
  * @property {string} MFE_CONFIG_API_URL
  * @property {string} APP_ID
  * @property {string} SUPPORT_URL
- * @property {string} THEME_OVERRIDE_URL
+ * @property {string} APP_THEME_CORE_URL
+ * @property {string} APP_THEME_LIGHT_URL
  */
