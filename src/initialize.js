@@ -231,6 +231,7 @@ function applyOverrideHandlers(overrides) {
     auth,
     analytics,
     i18n: noOp,
+    theme: noOp, // TODO: implement this
     ready: noOp,
     initError,
     ...overrides, // This will override any same-keyed handlers from above.
