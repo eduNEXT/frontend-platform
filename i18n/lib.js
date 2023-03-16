@@ -1,15 +1,9 @@
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 import PropTypes from 'prop-types';
 import Cookies from 'universal-cookie';
 import merge from 'lodash.merge';
@@ -44,29 +38,47 @@ import '@formatjs/intl-relativetimeformat/locale-data/ru';
 import '@formatjs/intl-relativetimeformat/locale-data/th';
 import '@formatjs/intl-relativetimeformat/locale-data/uk';
 var cookies = new Cookies();
-var supportedLocales = ['ar', // Arabic
+var supportedLocales = ['ar',
+// Arabic
 // NOTE: 'en' is not included in this list intentionally, since it's the fallback.
-'es-419', // Spanish, Latin American
-'fr', // French
-'zh-cn', // Chinese, Simplified
-'ca', // Catalan
-'he', // Hebrew
-'id', // Indonesian
-'ko-kr', // Korean (Korea)
-'pl', // Polish
-'pt-br', // Portuguese (Brazil)
-'ru', // Russian
-'th', // Thai
+'es-419',
+// Spanish, Latin American
+'fr',
+// French
+'zh-cn',
+// Chinese, Simplified
+'ca',
+// Catalan
+'he',
+// Hebrew
+'id',
+// Indonesian
+'ko-kr',
+// Korean (Korea)
+'pl',
+// Polish
+'pt-br',
+// Portuguese (Brazil)
+'ru',
+// Russian
+'th',
+// Thai
 'uk' // Ukrainian
 ];
-var rtlLocales = ['ar', // Arabic
-'he', // Hebrew
-'fa', // Farsi (not currently supported)
+
+var rtlLocales = ['ar',
+// Arabic
+'he',
+// Hebrew
+'fa',
+// Farsi (not currently supported)
 'ur' // Urdu (not currently supported)
 ];
+
 var config = null;
 var loggingService = null;
 var messages = null;
+
 /**
  * @memberof module:Internationalization
  *
@@ -77,36 +89,36 @@ var messages = null;
  *
  * @deprecated
  */
-
 export var intlShape = PropTypes.object;
+
 /**
  *
  * @ignore
  * @returns {LoggingService}
  */
-
 export var getLoggingService = function getLoggingService() {
   return loggingService;
 };
+
 /**
  * @memberof module:Internationalization
  */
-
 export var LOCALE_TOPIC = 'LOCALE';
+
 /**
  * @memberof module:Internationalization
  */
-
 export var LOCALE_CHANGED = "".concat(LOCALE_TOPIC, ".CHANGED");
+
 /**
  *
  * @memberof module:Internationalization
  * @returns {Cookies}
  */
-
 export function getCookies() {
   return cookies;
 }
+
 /**
  * Some of our dependencies function on primary language subtags, rather than full locales.
  * This function strips a locale down to that first subtag.  Depending on the code, this
@@ -115,10 +127,10 @@ export function getCookies() {
  * @param {string} code
  * @memberof module:Internationalization
  */
-
 export function getPrimaryLanguageSubtag(code) {
   return code.split('-')[0];
 }
+
 /**
  * Finds the closest supported locale to the one provided.  This is done in three steps:
  *
@@ -131,18 +143,16 @@ export function getPrimaryLanguageSubtag(code) {
  * @returns {string}
  * @memberof module:Internationalization
  */
-
 export function findSupportedLocale(locale) {
   if (messages[locale] !== undefined) {
     return locale;
   }
-
   if (messages[getPrimaryLanguageSubtag(locale)] !== undefined) {
     return getPrimaryLanguageSubtag(locale);
   }
-
   return 'en';
 }
+
 /**
  * Get the locale from the cookie or, failing that, the browser setting.
  * Gracefully fall back to a more general primary language subtag or to English (en)
@@ -153,30 +163,26 @@ export function findSupportedLocale(locale) {
  * @returns {string}
  * @memberof module:Internationalization
  */
-
 export function getLocale(locale) {
   if (messages === null) {
     throw new Error('getLocale called before configuring i18n. Call configure with messages first.');
-  } // 1. Explicit application request
-
-
+  }
+  // 1. Explicit application request
   if (locale !== undefined) {
     return findSupportedLocale(locale);
-  } // 2. User setting in cookie
-
-
+  }
+  // 2. User setting in cookie
   var cookieLangPref = cookies.get(config.LANGUAGE_PREFERENCE_COOKIE_NAME);
-
   if (cookieLangPref) {
     return findSupportedLocale(cookieLangPref.toLowerCase());
-  } // 3. Browser language (default)
+  }
+  // 3. Browser language (default)
   // Note that some browers prefer upper case for the region part of the locale, while others don't.
   // Thus the toLowerCase, for consistency.
   // https://developer.mozilla.org/en-US/docs/Web/API/NavigatorLanguage/language
-
-
   return findSupportedLocale(global.navigator.language.toLowerCase());
 }
+
 /**
  * Returns messages for the provided locale, or the user's preferred locale if no argument is
  * provided.
@@ -184,28 +190,27 @@ export function getLocale(locale) {
  * @param {string} [locale=getLocale()]
  * @memberof module:Internationalization
  */
-
 export function getMessages() {
   var locale = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getLocale();
   return messages[locale];
 }
+
 /**
  * Determines if the provided locale is a right-to-left language.
  *
  * @param {string} locale
  * @memberof module:Internationalization
  */
-
 export function isRtl(locale) {
   return rtlLocales.includes(locale);
 }
+
 /**
  * Handles applying the RTL stylesheet and "dir=rtl" attribute to the html tag if the current locale
  * is a RTL language.
  *
  * @memberof module:Internationalization
  */
-
 export function handleRtl() {
   if (isRtl(getLocale())) {
     global.document.getElementsByTagName('html')[0].setAttribute('dir', 'rtl');
@@ -240,8 +245,8 @@ var messagesShape = {
   th: PropTypes.objectOf(PropTypes.string),
   // Thai
   uk: PropTypes.objectOf(PropTypes.string) // Ukrainian
-
 };
+
 var optionsShape = {
   config: PropTypes.object.isRequired,
   loggingService: PropTypes.shape({
@@ -249,6 +254,7 @@ var optionsShape = {
   }).isRequired,
   messages: PropTypes.oneOfType([PropTypes.shape(messagesShape), PropTypes.arrayOf(PropTypes.shape(messagesShape))]).isRequired
 };
+
 /**
  *
  *
@@ -256,11 +262,11 @@ var optionsShape = {
  * @returns {Object}
  * @memberof module:Internationalization
  */
-
 export function mergeMessages() {
   var messagesArray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
   return Array.isArray(messagesArray) ? merge.apply(void 0, [{}].concat(_toConsumableArray(messagesArray))) : {};
 }
+
 /**
  * Configures the i18n library with messages for your application.
  *
@@ -273,21 +279,20 @@ export function mergeMessages() {
  * @param {Object} options.messages
  * @memberof module:Internationalization
  */
-
 export function configure(options) {
-  PropTypes.checkPropTypes(optionsShape, options, 'property', 'i18n'); // eslint-disable-next-line prefer-destructuring
-
-  loggingService = options.loggingService; // eslint-disable-next-line prefer-destructuring
-
+  PropTypes.checkPropTypes(optionsShape, options, 'property', 'i18n');
+  // eslint-disable-next-line prefer-destructuring
+  loggingService = options.loggingService;
+  // eslint-disable-next-line prefer-destructuring
   config = options.config;
   messages = Array.isArray(options.messages) ? mergeMessages(options.messages) : options.messages;
-
   if (config.ENVIRONMENT !== 'production') {
     Object.keys(messages).forEach(function (key) {
       if (supportedLocales.indexOf(key) < 0) {
         console.warn("Unexpected locale: ".concat(key)); // eslint-disable-line no-console
       }
     });
+
     supportedLocales.forEach(function (key) {
       if (messages[key] === undefined) {
         console.warn("Missing locale: ".concat(key)); // eslint-disable-line no-console

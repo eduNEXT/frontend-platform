@@ -42,59 +42,60 @@ var serviceShape = {
   sendPageEvent: PropTypes.func.isRequired
 };
 var service;
+
 /**
  *
  * @param {class} AnalyticsService
  * @param {*} options
  * @returns {AnalyticsService}
  */
-
 export function configure(AnalyticsService, options) {
   PropTypes.checkPropTypes(optionsShape, options, 'property', 'Analytics');
   service = new AnalyticsService(options);
   PropTypes.checkPropTypes(serviceShape, service, 'property', 'AnalyticsService');
   return service;
 }
+
 /**
  *
  * @param {*} eventName
  * @param {*} properties
  * @returns {Promise}
  */
-
 export function sendTrackingLogEvent(eventName, properties) {
   return service.sendTrackingLogEvent(eventName, properties);
 }
+
 /**
  *
  *
  * @param {*} userId
  * @param {*} traits
  */
-
 export function identifyAuthenticatedUser(userId, traits) {
   service.identifyAuthenticatedUser(userId, traits);
 }
+
 /**
  *
  *
  * @param {*} traits
  * @returns {Promise}
  */
-
 export function identifyAnonymousUser(traits) {
   return service.identifyAnonymousUser(traits);
 }
+
 /**
  *
  *
  * @param {*} eventName
  * @param {*} properties
  */
-
 export function sendTrackEvent(eventName, properties) {
   service.sendTrackEvent(eventName, properties);
 }
+
 /**
  *
  *
@@ -102,30 +103,29 @@ export function sendTrackEvent(eventName, properties) {
  * @param {*} name
  * @param {*} properties
  */
-
 export function sendPageEvent(category, name, properties) {
   service.sendPageEvent(category, name, properties);
 }
+
 /**
  *
  *
  * @returns {AnalyticsService}
  */
-
 export function getAnalyticsService() {
   if (!service) {
     throw Error('You must first configure the analytics service.');
   }
-
   return service;
 }
+
 /**
  *
  */
-
 export function resetAnalyticsService() {
   service = null;
 }
+
 /**
  * @name AnalyticsService
  * @interface

@@ -25,6 +25,7 @@
  *
  * @module Logging
  */
+
 import PropTypes from 'prop-types';
 var optionsShape = {
   config: PropTypes.object.isRequired
@@ -34,16 +35,17 @@ var serviceShape = {
   logError: PropTypes.func.isRequired
 };
 var service = null;
+
 /**
  *
  */
-
 export function configure(LoggingService, options) {
   PropTypes.checkPropTypes(optionsShape, options, 'property', 'Logging');
   service = new LoggingService(options);
   PropTypes.checkPropTypes(serviceShape, service, 'property', 'LoggingService');
   return service;
 }
+
 /**
  * Logs a message to the 'info' log level. Can accept custom attributes as a property of the error
  * object, or as an optional second parameter.
@@ -51,10 +53,10 @@ export function configure(LoggingService, options) {
  * @param {string|Error} infoStringOrErrorObject
  * @param {Object} [customAttributes={}]
  */
-
 export function logInfo(infoStringOrErrorObject, customAttributes) {
   return service.logInfo(infoStringOrErrorObject, customAttributes);
 }
+
 /**
  * Logs a message to the 'error' log level.  Can accept custom attributes as a property of the error
  * object, or as an optional second parameter.
@@ -62,31 +64,30 @@ export function logInfo(infoStringOrErrorObject, customAttributes) {
  * @param {string|Error} errorStringOrObject
  * @param {Object} [customAttributes={}]
  */
-
 export function logError(errorStringOrObject, customAttributes) {
   return service.logError(errorStringOrObject, customAttributes);
 }
+
 /**
  *
  * @throws {Error} Thrown if the logging service has not yet been configured via {@link configure}.
  * @returns {LoggingService}
  */
-
 export function getLoggingService() {
   if (!service) {
     throw Error('You must first configure the logging service.');
   }
-
   return service;
 }
+
 /**
  * Sets the configured logging service back to null.
  *
  */
-
 export function resetLoggingService() {
   service = null;
 }
+
 /**
  * @name LoggingService
  * @interface

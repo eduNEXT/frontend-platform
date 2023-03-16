@@ -1,19 +1,13 @@
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
 /**
  * #### Import members from **@edx/frontend-platform**
  *
@@ -21,6 +15,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  */
 import camelCase from 'lodash.camelcase';
 import snakeCase from 'lodash.snakecase';
+
 /**
  * This is the underlying function used by camelCaseObject, snakeCaseObject, and convertKeyNames
  * above.
@@ -51,30 +46,28 @@ import snakeCase from 'lodash.snakecase';
  * @param {function} modify
  * @returns {Object}
  */
-
 export function modifyObjectKeys(object, modify) {
   // If the passed in object is not an Object, return it.
   if (object === undefined || object === null || _typeof(object) !== 'object' && !Array.isArray(object)) {
     return object;
   }
-
   if (Array.isArray(object)) {
     return object.map(function (value) {
       return modifyObjectKeys(value, modify);
     });
-  } // Otherwise, process all its keys.
+  }
 
-
+  // Otherwise, process all its keys.
   var result = {};
   Object.entries(object).forEach(function (_ref) {
     var _ref2 = _slicedToArray(_ref, 2),
-        key = _ref2[0],
-        value = _ref2[1];
-
+      key = _ref2[0],
+      value = _ref2[1];
     result[modify(key)] = modifyObjectKeys(value, modify);
   });
   return result;
 }
+
 /**
  * Performs a deep conversion to camelCase on all keys in the provided object and its tree of
  * children.  Uses [lodash.camelcase](https://lodash.com/docs/4.17.15#camelCase) on each key.  This
@@ -87,10 +80,10 @@ export function modifyObjectKeys(object, modify) {
  * @param {Array|Object} object
  * @returns {Array|Object}
  */
-
 export function camelCaseObject(object) {
   return modifyObjectKeys(object, camelCase);
 }
+
 /**
  * Performs a deep conversion to snake_case on all keys in the provided object and its tree of
  * children.  Uses [lodash.snakecase](https://lodash.com/docs/4.17.15#snakeCase) on each key.  This
@@ -103,10 +96,10 @@ export function camelCaseObject(object) {
  * @param {Array|Object} object
  * @returns {Array|Object}
  */
-
 export function snakeCaseObject(object) {
   return modifyObjectKeys(object, snakeCase);
 }
+
 /**
  * Given a map of key-value pairs, performs a deep conversion key names in the specified object
  * _from_ the key _to_ the value.  This is useful for updating names in an API request to the names
@@ -133,14 +126,13 @@ export function snakeCaseObject(object) {
  * @param {Object} nameMap
  * @returns {Array|Object}
  */
-
 export function convertKeyNames(object, nameMap) {
   var transformer = function transformer(key) {
     return nameMap[key] === undefined ? key : nameMap[key];
   };
-
   return modifyObjectKeys(object, transformer);
 }
+
 /**
  * *Deprecated*: A method which converts the supplied query string into an object of
  * key-value pairs and returns it.  Defaults to the current query string - should perform like
@@ -150,7 +142,6 @@ export function convertKeyNames(object, nameMap) {
  * @param {string} [search=global.location.search]
  * @returns {Object}
  */
-
 export function getQueryParameters() {
   var search = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : global.location.search;
   var keyValueFragments = search.slice(search.indexOf('?') + 1).split('&').filter(function (hash) {
@@ -163,6 +154,7 @@ export function getQueryParameters() {
     return Object.assign(params, _defineProperty({}, key, decodeURIComponent(value)));
   }, {});
 }
+
 /**
  * This function helps catch a certain class of misconfiguration in which configuration variables
  * are not properly defined and/or supplied to a consumer that requires them.  Any key that exists
@@ -175,7 +167,6 @@ export function getQueryParameters() {
  * @param {string} requester A human-readable identifier for the code which called this function.
  * Used when throwing errors to aid in debugging.
  */
-
 export function ensureDefinedConfig(object, requester) {
   Object.keys(object).forEach(function (key) {
     if (object[key] === undefined) {

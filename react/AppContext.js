@@ -1,4 +1,5 @@
 import React from 'react';
+
 /**
  * `AppContext` provides data from `App` in a way that React components can readily consume, even
  * if it's mutable data. `AppContext` contains the following data structure:
@@ -15,7 +16,6 @@ import React from 'react';
  * `AppContext` is used in a React application like any other `[React Context](https://reactjs.org/docs/context.html)
  * @memberof module:React
  */
-
 var AppContext = /*#__PURE__*/React.createContext({
   authenticatedUser: null,
   config: {}

@@ -23,20 +23,18 @@
  *
  * @module Config
  */
+
 import { APP_CONFIG_INITIALIZED, CONFIG_CHANGED } from './constants';
 import { publish, subscribe } from './pubSub';
 import { ensureDefinedConfig } from './utils';
-
 function extractRegex(envVar) {
   // Convert the environment variable string to a regex, while guarding
   // against a non-string and an empty/whitespace-only string.
   if (typeof envVar === 'string' && envVar.trim() !== '') {
     return new RegExp(envVar);
   }
-
   return undefined;
 }
-
 var ENVIRONMENT = process.env.NODE_ENV;
 var config = {
   ACCESS_TOKEN_COOKIE_NAME: process.env.ACCESS_TOKEN_COOKIE_NAME,
@@ -74,6 +72,7 @@ var config = {
   PARAGON_THEME_CORE_URL: process.env.PARAGON_THEME_CORE_URL,
   PARAGON_THEME_VARIANTS_LIGHT_URL: process.env.PARAGON_THEME_VARIANTS_LIGHT_URL
 };
+
 /**
  * Getter for the application configuration document.  This is synchronous and merely returns a
  * reference to an existing object, and is thus safe to call as often as desired.  The document
@@ -81,10 +80,10 @@ var config = {
  *
  * @returns {ConfigDocument}
   */
-
 export function getConfig() {
   return config;
 }
+
 /**
  * Replaces the existing ConfigDocument.  This is not commonly used, but can be helpful for tests.
  *
@@ -93,12 +92,12 @@ export function getConfig() {
  *
  * @param {ConfigDocument} newConfig
  */
-
 export function setConfig(newConfig) {
   ensureDefinedConfig(config, 'config');
   config = newConfig;
   publish(CONFIG_CHANGED);
 }
+
 /**
  * Merges additional configuration values into the ConfigDocument returned by `getConfig`.  Will
  * override any values that exist with the same keys.
@@ -113,12 +112,12 @@ export function setConfig(newConfig) {
  *
  * @param {Object} newConfig
  */
-
 export function mergeConfig(newConfig) {
   ensureDefinedConfig(newConfig, 'ProcessEnvConfigService');
   config = Object.assign(config, newConfig);
   publish(CONFIG_CHANGED);
 }
+
 /**
  * A method allowing application code to indicate that particular ConfigDocument keys are required
  * for them to function.  This is useful for diagnosing development/deployment issues, primarily,
@@ -143,7 +142,6 @@ export function mergeConfig(newConfig) {
  * @param {Array} keys
  * @param {string} [requester='unspecified application code']
  */
-
 export function ensureConfig(keys) {
   var requester = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'unspecified application code';
   subscribe(APP_CONFIG_INITIALIZED, function () {
@@ -155,6 +153,7 @@ export function ensureConfig(keys) {
     });
   });
 }
+
 /**
  * An object describing the current application configuration.
  *

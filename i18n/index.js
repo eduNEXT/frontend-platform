@@ -82,6 +82,7 @@
  * @kind function
  * @see {@link https://formatjs.io/docs/react-intl/api#useIntl Intl}
  */
+
 export { createIntl, FormattedDate, FormattedTime, FormattedRelativeTime, FormattedNumber, FormattedPlural, FormattedMessage, defineMessages, IntlProvider, useIntl } from 'react-intl';
 export { intlShape, configure, getPrimaryLanguageSubtag, getLocale, getMessages, isRtl, handleRtl, LOCALE_CHANGED, LOCALE_TOPIC } from './lib';
 export { default as injectIntl } from './injectIntlWithShim';

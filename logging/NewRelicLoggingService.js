@@ -1,43 +1,33 @@
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 /**
  * NewRelic will not log an error if it is too long.
  *
  * @ignore
  */
 export var MAX_ERROR_LENGTH = 4000;
-
 function fixErrorLength(error) {
   if (error.message && error.message.length > MAX_ERROR_LENGTH) {
     var processedError = Object.create(error);
     processedError.message = processedError.message.substring(0, MAX_ERROR_LENGTH);
     return processedError;
   }
-
   if (typeof error === 'string' && error.length > MAX_ERROR_LENGTH) {
     return error.substring(0, MAX_ERROR_LENGTH);
   }
-
   return error;
 }
+
 /* Constants used as New Relic page action names. */
-
-
 var pageActionNameInfo = 'INFO';
 var pageActionNameIgnoredError = 'IGNORED_ERROR';
-
 function sendPageAction(actionName, message, customAttributes) {
   if (process.env.NODE_ENV === 'development') {
     console.log(message, customAttributes); // eslint-disable-line
@@ -49,7 +39,6 @@ function sendPageAction(actionName, message, customAttributes) {
     }, customAttributes));
   }
 }
-
 function sendError(error, customAttributes) {
   if (process.env.NODE_ENV === 'development') {
     console.error(error, customAttributes); // eslint-disable-line
@@ -59,6 +48,7 @@ function sendError(error, customAttributes) {
     window.newrelic.noticeError(fixErrorLength(error), customAttributes);
   }
 }
+
 /**
  * The NewRelicLoggingService is a concrete implementation of the logging service interface that
  * sends messages to NewRelic that can be seen in NewRelic Browser and NewRelic Insights. When in
@@ -92,12 +82,9 @@ function sendError(error, customAttributes) {
  * @implements {LoggingService}
  * @memberof module:Logging
  */
-
-
 var NewRelicLoggingService = /*#__PURE__*/function () {
   function NewRelicLoggingService(options) {
     _classCallCheck(this, NewRelicLoggingService);
-
     var config = options ? options.config : undefined;
     /*
         String which is an explicit error message regex. If an error message matches the regex, the error
@@ -118,9 +105,9 @@ var NewRelicLoggingService = /*#__PURE__*/function () {
         'This error should not match anything!'.match(x);
          For edx.org, add new error message regexes in edx-internal YAML as needed.
     */
-
     this.ignoredErrorRegexes = config ? config.IGNORED_ERROR_REGEX : undefined;
   }
+
   /**
    *
    *
@@ -128,26 +115,22 @@ var NewRelicLoggingService = /*#__PURE__*/function () {
    * @param {*} [customAttributes={}]
    * @memberof NewRelicLoggingService
    */
-
-
   _createClass(NewRelicLoggingService, [{
     key: "logInfo",
     value: function logInfo(infoStringOrErrorObject) {
       var customAttributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var message = infoStringOrErrorObject;
       var customAttrs = customAttributes;
-
       if (_typeof(infoStringOrErrorObject) === 'object' && 'message' in infoStringOrErrorObject) {
         /* Caller has passed in an error object to be logged as a page action. */
-
         /* Extract the attributes and the message. */
         var infoCustomAttributes = infoStringOrErrorObject.customAttributes || {};
         customAttrs = _objectSpread(_objectSpread({}, infoCustomAttributes), customAttributes);
         message = infoStringOrErrorObject.message;
       }
-
       sendPageAction(pageActionNameInfo, message, customAttrs);
     }
+
     /**
      *
      *
@@ -155,28 +138,23 @@ var NewRelicLoggingService = /*#__PURE__*/function () {
      * @param {*} [customAttributes={}]
      * @memberof NewRelicLoggingService
      */
-
   }, {
     key: "logError",
     value: function logError(errorStringOrObject) {
       var customAttributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var errorCustomAttributes = errorStringOrObject.customAttributes || {};
-
       var allCustomAttributes = _objectSpread(_objectSpread({}, errorCustomAttributes), customAttributes);
-
       if (Object.keys(allCustomAttributes).length === 0) {
         // noticeError expects undefined if there are no custom attributes.
         allCustomAttributes = undefined;
       }
+
       /*
           Separate the errors into ignored errors and other errors.
           Ignored errors are logged via adding a page action.
           Other errors are logged via noticeError and count as "JS Errors" for the application.
       */
-
-
       var errorMessage = errorStringOrObject.message || (typeof errorStringOrObject === 'string' ? errorStringOrObject : '');
-
       if (this.ignoredErrorRegexes && errorMessage.match(this.ignoredErrorRegexes)) {
         /* ignored error */
         sendPageAction(pageActionNameIgnoredError, errorMessage, allCustomAttributes);
@@ -186,9 +164,7 @@ var NewRelicLoggingService = /*#__PURE__*/function () {
       }
     }
   }]);
-
   return NewRelicLoggingService;
 }();
-
 export { NewRelicLoggingService as default };
 //# sourceMappingURL=NewRelicLoggingService.js.map

@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 import { sendPageEvent } from '../analytics';
+
 /**
  * A react-router Route component that calls `sendPageEvent` when it becomes active.
  *
@@ -9,7 +10,6 @@ import { sendPageEvent } from '../analytics';
  * @memberof module:React
  * @param {Object} props
  */
-
 export default function PageRoute(props) {
   var match = useRouteMatch({
     path: props.path,
@@ -20,8 +20,8 @@ export default function PageRoute(props) {
   useEffect(function () {
     if (match) {
       sendPageEvent();
-    } // eslint-disable-next-line react-hooks/exhaustive-deps
-
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(match)]);
   return /*#__PURE__*/React.createElement(Route, props);
 }

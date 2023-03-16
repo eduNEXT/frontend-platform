@@ -4,6 +4,7 @@
  *
  * @module Testing
  */
+
 export { default as initializeMockApp } from './initializeMockApp';
 export { default as mockMessages } from './mockMessages';
 //# sourceMappingURL=index.js.map
