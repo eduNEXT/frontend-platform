@@ -64,3 +64,17 @@ export const APP_INIT_ERROR = `${APP_TOPIC}.INIT_ERROR`;
 export const CONFIG_TOPIC = 'CONFIG';
 
 export const CONFIG_CHANGED = `${CONFIG_TOPIC}.CHANGED`;
+
+export const PRIMARY_COLOR_DEFINITIONS = {
+  'pgn-color-primary-100': { '#FFFFFF': 94 },
+  'pgn-color-primary-200': { '#FFFFFF': 75 },
+  'pgn-color-primary-300': { '#FFFFFF': 50 },
+  'pgn-color-primary-400': { '#FFFFFF': 25 },
+  'pgn-color-primary-500': { '#FFFFFF': 0 },
+  'pgn-color-primary-600': { '#000000': 10 },
+  'pgn-color-primary-700': { '#000000': 20 },
+  'pgn-color-primary-800': { '#000000': 25 },
+  'pgn-color-primary-900': { '#000000': 30 },
+  'pgn-color-link-base': { '#FFFFFF': 35 },
+  'pgn-color-link-hover': { '#FFFFFF': 0 },
+};

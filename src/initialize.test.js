@@ -355,4 +355,89 @@ describe('initialize', () => {
     expect(hydrateAuthenticatedUser).not.toHaveBeenCalled();
     expect(logError).not.toHaveBeenCalled();
   });
+
+  it('should not set any color', async () => {
+    const messages = { i_am: 'a message' };
+    await initialize({
+      messages,
+    });
+
+    // eslint-disable-next-line no-underscore-dangle
+    expect(document.documentElement.style._values).toEqual({});
+    expect(logError).not.toHaveBeenCalled();
+  });
+
+  it('should set primary color and calculate its levels', async () => {
+    config.CUSTOM_PRIMARY_COLORS = { 'pgn-color-primary-base': '#A000000' };
+    const messages = { i_am: 'a message' };
+    const expectedKeys = [
+      '--pgn-color-primary-base',
+      '--pgn-color-primary-100',
+      '--pgn-color-primary-200',
+      '--pgn-color-primary-300',
+      '--pgn-color-primary-400',
+      '--pgn-color-primary-500',
+      '--pgn-color-primary-600',
+      '--pgn-color-primary-700',
+      '--pgn-color-primary-800',
+      '--pgn-color-primary-900',
+      '--pgn-color-link-base',
+      '--pgn-color-link-hover',
+    ];
+
+    await initialize({
+      messages,
+    });
+
+    // eslint-disable-next-line no-underscore-dangle
+    expect(Object.keys(document.documentElement.style._values)).toEqual(expectedKeys);
+    expect(logError).not.toHaveBeenCalled();
+  });
+
+  it('should set primary color and its levels from config', async () => {
+    config.CUSTOM_PRIMARY_COLORS = {
+      'pgn-color-primary-base': '#A000000',
+      'pgn-color-primary-100': '#A001000',
+      'pgn-color-primary-200': '#A000000',
+      'pgn-color-primary-300': '#A045000',
+      'pgn-color-primary-400': '#A07AB00',
+      'pgn-color-primary-500': '#A000B12',
+      'pgn-color-primary-600': '#A087400',
+      'pgn-color-primary-700': '#A0abc00',
+      'pgn-color-primary-800': '#AABCFA0',
+      'pgn-color-primary-900': '#A014200',
+      'pgn-color-link-base': '#FF0056',
+      'pgn-color-link-hover': '#AFFCDA',
+    };
+    const messages = { i_am: 'a message' };
+
+    await initialize({
+      messages,
+    });
+
+    // eslint-disable-next-line no-underscore-dangle
+    expect(Object.values(document.documentElement.style._values)).toEqual(Object.values(config.CUSTOM_PRIMARY_COLORS));
+    expect(logError).not.toHaveBeenCalled();
+  });
+  it('should log error when color is invalid', async () => {
+    // eslint-disable-next-line no-console
+    console.error = jest.fn();
+    configureCache.mockReturnValueOnce(Promise.resolve({
+      get: (url) => {
+        const params = new URL(url).search;
+        const mfe = new URLSearchParams(params).get('mfe');
+        return ({ data: { ...newConfig.common, ...newConfig[mfe] } });
+      },
+    }));
+    config.CUSTOM_PRIMARY_COLORS = { 'pgn-color-primary-base': '#AB' };
+    const messages = { i_am: 'a message' };
+
+    await initialize({
+      messages,
+    });
+
+    // eslint-disable-next-line no-console
+    expect(console.error).toHaveBeenNthCalledWith(9, 'Error setting custom colors', 'Parameter color does not have format #RRGGBB');
+    expect(logError).not.toHaveBeenCalled();
+  });
 });
