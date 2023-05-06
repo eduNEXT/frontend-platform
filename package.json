@@ -1,6 +1,6 @@
 {
-  "name": "@edx/frontend-platform",
-  "version": "1.0.0-semantically-released",
+  "name": "@edunext/frontend-platform",
+  "version": "3.7.0-alpha-05",
   "description": "Foundational application framework for Open edX micro-frontend applications.",
   "main": "index.js",
   "publishConfig": {
@@ -22,19 +22,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openedx/frontend-platform.git"
+    "url": "git+https://github.com/edunext/frontend-platform.git"
   },
   "author": "edX",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/openedx/frontend-platform/issues"
+    "url": "https://github.com/edX/frontend-platform/issues"
   },
-  "homepage": "https://github.com/openedx/frontend-platform#readme",
+  "homepage": "https://github.com/edunexr/frontend-platform#readme",
   "devDependencies": {
     "@edx/browserslist-config": "1.1.1",
     "@edx/brand": "npm:@edx/brand-openedx@1.2.0",
     "@edx/frontend-build": "12.5.6",
-    "@edx/paragon": "^21.0.0-alpha.15",
+    "@edx/paragon": "^21.0.0-alpha.23",
     "axios-mock-adapter": "1.21.2",
     "core-js": "3.29.0",
     "enzyme": "3.11.0",
@@ -72,7 +72,7 @@
     "universal-cookie": "4.0.4"
   },
   "peerDependencies": {
-    "@edx/paragon": ">= 10.0.0 < 22.0.0",
+    "@edx/paragon": ">= 10.0.0 < 22.0.0, ^21.0.0-alpha.23",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
