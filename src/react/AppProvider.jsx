@@ -10,6 +10,7 @@ import {
   useAppEvent,
   useParagonTheme,
 } from './hooks';
+import { paragonThemeActions } from './reducers';
 import { getAuthenticatedUser, AUTHENTICATED_USER_CHANGED } from '../auth';
 import { getConfig } from '../config';
 import { CONFIG_CHANGED } from '../constants';
@@ -74,7 +75,9 @@ export default function AppProvider({ store, children, wrapWithRouter }) {
     locale,
     paragonTheme: {
       state: paragonThemeState,
-      dispatch: paragonThemeDispatch,
+      setThemeVariant: (themeVariant) => {
+        paragonThemeDispatch(paragonThemeActions.setParagonThemeVariant(themeVariant));
+      },
     },
   }), [authenticatedUser, config, locale, paragonThemeState, paragonThemeDispatch]);
 
