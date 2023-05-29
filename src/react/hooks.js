@@ -2,10 +2,7 @@ import {
   useCallback, useEffect, useState, useReducer,
 } from 'react';
 import { subscribe, unsubscribe } from '../pubSub';
-import {
-  PARAGON_THEME_CORE,
-  PARAGON_THEME_VARIANT_LIGHT,
-} from './constants';
+import { sendTrackEvent } from '../analytics';
 import { paragonThemeReducer, paragonThemeActions } from './reducers';
 import { logError, logInfo } from '../logging';
 import { getConfig } from '../config';
@@ -30,9 +27,30 @@ export const useAppEvent = (type, callback) => {
   }, [callback, type]);
 };
 
-const initialParagonThemeState = {
-  isThemeLoaded: false,
-  themeVariant: PARAGON_THEME_VARIANT_LIGHT,
+/**
+ * A React hook that tracks user's preferred color scheme (light or dark) and sends respective
+ * event to the tracking service.
+ *
+ * @memberof module:React
+ */
+export const useTrackColorSchemeChoice = () => {
+  useEffect(() => {
+    const trackColorSchemeChoice = ({ matches }) => {
+      const preferredColorScheme = matches ? 'dark' : 'light';
+      sendTrackEvent('openedx.ui.frontend-platform.prefers-color-scheme.selected', { preferredColorScheme });
+    };
+    const colorSchemeQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
+    if (colorSchemeQuery) {
+      // send user's initial choice
+      trackColorSchemeChoice(colorSchemeQuery);
+      colorSchemeQuery.addEventListener('change', trackColorSchemeChoice);
+    }
+    return () => {
+      if (colorSchemeQuery) {
+        colorSchemeQuery.removeEventListener('change', trackColorSchemeChoice);
+      }
+    };
+  }, []);
 };
 
 /**
@@ -40,19 +58,19 @@ const initialParagonThemeState = {
  *
  * @memberof module:React
  * @param {object} args
- * @param {string} args.coreThemeUrl The url of the core theme CSS.
+ * @param {object} args.themeCore Object representing the core Paragon theme CSS.
  * @param {string} args.onLoad A callback function called when the core theme CSS is loaded.
  */
 export const useParagonThemeCore = ({
-  coreThemeUrl,
+  themeCore,
   onLoad,
 }) => {
   useEffect(() => {
     // If there is no config for the core theme url, do nothing.
-    if (!coreThemeUrl) {
+    if (!themeCore?.url) {
       return;
     }
-    let coreThemeLink = document.head.querySelector(`link[href='${coreThemeUrl}']`);
+    let coreThemeLink = document.head.querySelector(`link[href='${themeCore.url}']`);
     if (!coreThemeLink) {
       const getExistingCoreThemeLinks = () => document.head.querySelectorAll('link[data-paragon-theme-core="true"]');
       const removeExistingLinks = (existingLinks) => {
@@ -89,13 +107,13 @@ export const useParagonThemeCore = ({
         };
         return coreThemeLink;
       };
-      coreThemeLink = createCoreThemeLink(coreThemeUrl);
+      coreThemeLink = createCoreThemeLink(themeCore?.url);
       document.head.insertAdjacentElement(
         'afterbegin',
         coreThemeLink,
       );
     }
-  }, [coreThemeUrl, onLoad]);
+  }, [themeCore?.url, onLoad]);
 };
 
 /**
@@ -113,7 +131,7 @@ export const useParagonThemeCore = ({
  * @param {string} args.onLoad A callback function called when the core theme CSS is loaded.
  */
 const useParagonThemeVariants = ({
-  themeVariantUrls,
+  themeVariants,
   currentThemeVariant,
   onLoadThemeVariantLight,
 }) => {
@@ -129,7 +147,7 @@ const useParagonThemeVariants = ({
      * based on the current theme variant.
      */
     const setThemeVariantLoaded = (themeVariant) => {
-      if (themeVariant === PARAGON_THEME_VARIANT_LIGHT) {
+      if (themeVariant === 'light') {
         onLoadThemeVariantLight();
       }
     };
@@ -137,13 +155,13 @@ const useParagonThemeVariants = ({
     /**
      * Iterate over each theme variant URL and inject it into the HTML document if it doesn't already exist.
      */
-    Object.entries(themeVariantUrls).forEach(([themeVariant, themeVariantUrl]) => {
+    Object.entries(themeVariants).forEach(([themeVariant, value]) => {
       // If there is no config for the theme variant URL, set the theme variant to loaded and continue.
-      if (!themeVariantUrl) {
+      if (!value.url) {
         setThemeVariantLoaded(themeVariant);
         return;
       }
-      let themeVariantLink = document.head.querySelector(`link[href='${themeVariantUrl}']`);
+      let themeVariantLink = document.head.querySelector(`link[href='${value.url}']`);
       const stylesheetRelForVariant = generateStylesheetRelAttr(themeVariant);
       if (!themeVariantLink) {
         const getExistingThemeVariantLinks = () => document.head.querySelectorAll(`link[data-paragon-theme-variant='${themeVariant}']`);
@@ -163,7 +181,7 @@ const useParagonThemeVariants = ({
             });
           };
           themeVariantLink.onerror = () => {
-            logError(`Failed to load theme variant (${themeVariant}) CSS from ${themeVariantUrl}`);
+            logError(`Failed to load theme variant (${themeVariant}) CSS from ${value.url}`);
             if (PARAGON?.themeUrls?.variants?.[themeVariant]) {
               const themeVariantFallbackUrl = `${getConfig().BASE_URL}/${PARAGON.themeUrls.variants[themeVariant]}`;
               logInfo(`Falling back to locally installed theme variant (${themeVariant}) CSS: ${themeVariantFallbackUrl}`);
@@ -180,7 +198,7 @@ const useParagonThemeVariants = ({
           };
           return themeVariantLink;
         };
-        themeVariantLink = createThemeVariantLink(themeVariantUrl);
+        themeVariantLink = createThemeVariantLink(value.url);
         document.head.insertAdjacentElement(
           'afterbegin',
           themeVariantLink,
@@ -189,7 +207,7 @@ const useParagonThemeVariants = ({
         themeVariantLink.rel = stylesheetRelForVariant;
       }
     });
-  }, [themeVariantUrls, currentThemeVariant, onLoadThemeVariantLight]);
+  }, [themeVariants, currentThemeVariant, onLoadThemeVariantLight]);
 };
 
 const handleParagonVersionSubstitution = (url) => {
@@ -205,27 +223,43 @@ const handleParagonVersionSubstitution = (url) => {
  * @returns An object containing the URLs for the theme's core CSS and any theme variants.
  */
 const getParagonThemeUrls = (config) => {
-  const coreCssUrl = config.PARAGON_THEME_URLS?.[PARAGON_THEME_CORE] ?? config.PARAGON_THEME_CORE_URL;
-  const lightThemeVariantCssUrl = (
-    config.PARAGON_THEME_URLS?.variants?.[PARAGON_THEME_VARIANT_LIGHT] ?? config.PARAGON_THEME_VARIANTS_LIGHT_URL
-  );
+  const paragonThemeUrls = config.PARAGON_THEME_URLS || {};
+  const coreCssUrl = handleParagonVersionSubstitution(paragonThemeUrls.core);
 
-  const hasMissingCssUrls = !coreCssUrl || !lightThemeVariantCssUrl;
-  if (hasMissingCssUrls && !!PARAGON) {
+  const themeVariantsCss = {};
+  Object.entries(paragonThemeUrls.variants || {}).forEach(([themeVariant, { url, ...rest }]) => {
+    themeVariantsCss[themeVariant] = {
+      url: handleParagonVersionSubstitution(url),
+      ...rest,
+    };
+  });
+
+  const hasMissingCssUrls = !coreCssUrl || Object.keys(themeVariantsCss).length === 0;
+  if (hasMissingCssUrls) {
+    if (!PARAGON) {
+      return {};
+    }
+    const themeVariants = {};
     const prependBaseUrl = (url) => `${config.BASE_URL}/${url}`;
+    Object.entries(PARAGON.themeUrls.variants).forEach(([themeVariant, { fileName, ...rest }]) => {
+      themeVariants[themeVariant] = {
+        url: prependBaseUrl(fileName),
+        ...rest,
+      };
+    });
     return {
-      [PARAGON_THEME_CORE]: prependBaseUrl(PARAGON.themeUrls.core),
-      variants: {
-        [PARAGON_THEME_VARIANT_LIGHT]: prependBaseUrl(PARAGON.themeUrls.variants.light),
+      core: {
+        url: prependBaseUrl(PARAGON.themeUrls.core),
       },
+      variants: themeVariants,
     };
   }
 
   return {
-    [PARAGON_THEME_CORE]: handleParagonVersionSubstitution(coreCssUrl),
-    variants: {
-      [PARAGON_THEME_VARIANT_LIGHT]: handleParagonVersionSubstitution(lightThemeVariantCssUrl),
+    core: {
+      url: handleParagonVersionSubstitution(coreCssUrl),
     },
+    variants: themeVariantsCss,
   };
 };
 
@@ -237,13 +271,8 @@ const getParagonThemeUrls = (config) => {
  * current theme variant's CSS. This ensures that if the theme variant is changed at runtime, the CSS for the new theme
  * variant will already be loaded.
  *
- * Note: only "light" theme variant is currently supported, though the intent is also support "dark" theme
- * variant in the future.
- *
  * @memberof module:React
- * @param {object} args
- * @param {object} args.themeUrls Should contain the URLs for the theme's core CSS and any theme
- *  variants, e.g. `{ core: 'https://path/to/core.css', variants: { light: 'https://path/to/light.css' } }`.
+ * @param {object} config An object containing the URLs for the theme's core CSS and any theme (i.e., `getConfig()`)
  *
  * @returns An array containing 2 elements: 1) an object containing the app
  *  theme state, and 2) a dispatch function to mutate the app theme state.
@@ -251,10 +280,14 @@ const getParagonThemeUrls = (config) => {
 export const useParagonTheme = (config) => {
   const paragonThemeUrls = getParagonThemeUrls(config);
   const {
-    core: coreThemeUrl,
-    variants: themeVariantUrls,
+    core: themeCore,
+    variants: themeVariants,
   } = paragonThemeUrls;
 
+  const initialParagonThemeState = {
+    isThemeLoaded: false,
+    themeVariant: 'light',
+  };
   const [themeState, dispatch] = useReducer(paragonThemeReducer, initialParagonThemeState);
 
   const [isCoreThemeLoaded, setIsCoreThemeLoaded] = useState(false);
@@ -270,13 +303,13 @@ export const useParagonTheme = (config) => {
 
   // load the core theme CSS
   useParagonThemeCore({
-    coreThemeUrl,
+    themeCore,
     onLoad: onLoadThemeCore,
   });
 
   // load the theme variant(s) CSS
   useParagonThemeVariants({
-    themeVariantUrls,
+    themeVariants,
     onLoadThemeVariantLight,
     currentThemeVariant: themeState.themeVariant,
   });
@@ -288,8 +321,8 @@ export const useParagonTheme = (config) => {
     }
 
     // the core theme and light theme variant is still loading, do nothing.
-    const hasDefaultThemeConfig = (coreThemeUrl && themeVariantUrls[PARAGON_THEME_VARIANT_LIGHT]);
-    if (!hasDefaultThemeConfig) {
+    const hasThemeConfig = (themeCore.url && Object.keys(themeVariants).length > 0);
+    if (!hasThemeConfig) {
       // no theme URLs to load, set loading to false.
       dispatch(paragonThemeActions.setParagonThemeLoaded(true));
     }
@@ -305,8 +338,7 @@ export const useParagonTheme = (config) => {
     themeState.isThemeLoaded,
     isCoreThemeLoaded,
     isLightThemeVariantLoaded,
-    themeVariantUrls,
-    coreThemeUrl,
+    themeCore.url,
   ]);
 
   return [themeState, dispatch];
