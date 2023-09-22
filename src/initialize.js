@@ -90,6 +90,15 @@ import {
 } from './constants';
 import configureCache from './auth/LocalForageCache';
 
+function getPath(url) {
+  try {
+    const parsedURL = new URL(url);
+    return parsedURL.pathname;
+  }
+  catch (e){
+    return url
+  }
+}
 /**
  * A browser history or memory history object created by the [history](https://github.com/ReactTraining/history)
  * package.  Applications are encouraged to use this history object, rather than creating their own,
@@ -99,7 +108,7 @@ import configureCache from './auth/LocalForageCache';
  */
 export const history = (typeof window !== 'undefined')
   ? createBrowserHistory({
-    basename: getConfig().PUBLIC_PATH,
+    basename: getPath(getConfig().PUBLIC_PATH),
   }) : createMemoryHistory();
 
 /**
