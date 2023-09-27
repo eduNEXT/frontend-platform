@@ -1,4 +1,5 @@
 import PubSub from 'pubsub-js';
+import { createBrowserHistory } from 'history';
 import {
   APP_PUBSUB_INITIALIZED,
   APP_CONFIG_INITIALIZED,
@@ -35,6 +36,7 @@ jest.mock('./logging');
 jest.mock('./auth');
 jest.mock('./analytics');
 jest.mock('./i18n');
+jest.mock('history');
 
 let config = null;
 describe('initialize', () => {
@@ -238,5 +240,14 @@ describe('initialize', () => {
     expect(overrideHandlers.i18n).not.toHaveBeenCalled();
     expect(overrideHandlers.ready).not.toHaveBeenCalled();
     expect(overrideHandlers.initError).toHaveBeenCalledWith(new Error('uhoh!'));
+  });
+});
+
+describe('history', () => {
+  it('browser history called by default path', async () => {
+    // import history from initialize;
+    expect(createBrowserHistory).toHaveBeenCalledWith({
+      basename: '/',
+    });
   });
 });
