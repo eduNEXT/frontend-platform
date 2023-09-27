@@ -138,13 +138,9 @@ export function convertKeyNames(object, nameMap) {
  * @returns {Object}
  */
 export function parseURL(url) {
-  if (typeof document !== 'undefined') {
-    const parser = document.createElement('a');
-    parser.href = url;
-    return parser;
-  }
-
-  return {};
+  const parser = document.createElement('a');
+  parser.href = url;
+  return parser;
 }
 
 /**
@@ -155,7 +151,7 @@ export function parseURL(url) {
  * @returns {string}
  */
 export function getPath(url) {
-  return typeof document !== 'undefined' ? parseURL(url)?.pathname : '';
+  return parseURL(url).pathname;
 }
 
 /**
