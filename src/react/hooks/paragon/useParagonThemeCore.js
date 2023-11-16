@@ -35,7 +35,7 @@ const useParagonThemeCore = ({
       return;
     }
     const getParagonThemeCoreLink = () => document.head.querySelector('link[data-paragon-theme-core="true"');
-    const existingCoreThemeLink = document.head.querySelector(`link[href='${themeCore.urls.default}']`);
+    const existingCoreThemeLink = document.head.querySelector(`link[href='${themeCore.urls.default}'][rel=stylesheet]`);
     if (!existingCoreThemeLink) {
       const getExistingCoreThemeLinks = (isBrandOverride) => {
         const coreThemeLinkSelector = `link[data-${isBrandOverride ? 'brand' : 'paragon'}-theme-core="true"]`;

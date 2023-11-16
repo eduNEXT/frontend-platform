@@ -48,7 +48,7 @@ const useParagonThemeVariants = ({
         document.querySelector('html').removeAttribute(htmlDataThemeVariantAttr);
       };
     }
-    return () => {}; // no-op
+    return () => { }; // no-op
   }, [themeVariants, currentThemeVariant]);
 
   useEffect(() => {
@@ -78,8 +78,8 @@ const useParagonThemeVariants = ({
         return;
       }
       const getParagonThemeVariantLink = () => document.head.querySelector(`link[data-paragon-theme-variant='${themeVariant}']`);
-      const existingThemeVariantLink = document.head.querySelector(`link[href='${value.urls.default}']`);
-      const existingThemeVariantBrandLink = document.head.querySelector(`link[href='${value.urls.brandOverride}']`);
+      const existingThemeVariantLink = document.head.querySelector(`link[href='${value.urls.default}'][rel=stylesheet]`);
+      const existingThemeVariantBrandLink = document.head.querySelector(`link[href='${value.urls.brandOverride}'][rel=stylesheet]`);
 
       const getExistingThemeVariantLinks = (isBrandOverride) => {
         const themeVariantLinkSelector = `link[data-${isBrandOverride ? 'brand' : 'paragon'}-theme-variant='${themeVariant}']`;
@@ -187,7 +187,7 @@ const useParagonThemeVariants = ({
       } else {
         const updatedStylesheetRel = generateStylesheetRelAttr(themeVariant);
         existingThemeVariantLink.rel = updatedStylesheetRel;
-        existingThemeVariantBrandLink.rel = updatedStylesheetRel;
+        if (existingThemeVariantBrandLink) { existingThemeVariantBrandLink.rel = updatedStylesheetRel; }
       }
     });
   }, [themeVariants, currentThemeVariant, onLoad]);
