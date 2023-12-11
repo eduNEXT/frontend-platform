@@ -2,7 +2,7 @@
 .idea
 .vscode
 coverage
-dist
+# dist
 node_modules
 /docs/api
 .env.private
