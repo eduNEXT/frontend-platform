@@ -1,6 +1,6 @@
 {
   "name": "@edunext/frontend-platform",
-  "version": "3.3.0-alpha.1",
+  "version": "3.3.0-alpha.2",
   "description": "Foundational application framework for Open edX micro-frontend applications.",
   "main": "index.js",
   "publishConfig": {
@@ -73,7 +73,7 @@
     "universal-cookie": "4.0.4"
   },
   "peerDependencies": {
-    "@edx/paragon": ">= 10.0.0 < 22.0.0, ^21.0.0-alpha.23",
+    "@edx/paragon": " >=22.0.0-alpha.1 || >=21.0.0-alpha.1",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
