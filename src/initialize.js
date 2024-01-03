@@ -46,6 +46,8 @@
  */
 
 import { createBrowserHistory, createMemoryHistory } from 'history';
+
+import { getPath } from './utils';
 import {
   publish,
 } from './pubSub';
@@ -89,7 +91,7 @@ import configureCache from './auth/LocalForageCache';
  */
 export const history = (typeof window !== 'undefined')
   ? createBrowserHistory({
-    basename: getConfig().PUBLIC_PATH,
+    basename: getPath(getConfig().PUBLIC_PATH),
   }) : createMemoryHistory();
 
 /**
@@ -175,7 +177,7 @@ export async function analytics() {
 }
 
 function applyOverrideHandlers(overrides) {
-  const noOp = async () => {};
+  const noOp = async () => { };
   return {
     pubSub: noOp,
     config: noOp,
