@@ -9,6 +9,7 @@ import AppContext from './AppContext';
 import {
   useAppEvent,
   useParagonTheme,
+  useTrackColorSchemeChoice,
 } from './hooks';
 import { paragonThemeActions } from './reducers';
 import { getAuthenticatedUser, AUTHENTICATED_USER_CHANGED } from '../auth';
