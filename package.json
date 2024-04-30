@@ -1,6 +1,6 @@
 {
   "name": "@edx/frontend-platform",
-  "version": "1.0.0-semantically-released",
+  "version": "v5.5.4",
   "description": "Foundational application framework for Open edX micro-frontend applications.",
   "main": "index.js",
   "publishConfig": {
@@ -23,14 +23,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openedx/frontend-platform.git"
+    "url": "git+https://github.com/edunext/frontend-platform.git"
   },
   "author": "edX",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/openedx/frontend-platform/issues"
+    "url": "https://github.com/edunext/frontend-platform/issues"
   },
-  "homepage": "https://github.com/openedx/frontend-platform#readme",
+  "homepage": "https://github.com/edunext/frontend-platform#readme",
   "devDependencies": {
     "@edx/brand": "npm:@edx/brand-openedx@1.2.0",
     "@edx/browserslist-config": "1.2.0",
