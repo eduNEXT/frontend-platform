@@ -1,9 +1,9 @@
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 import PropTypes from 'prop-types';
 import Cookies from 'universal-cookie';
 import merge from 'lodash.merge';
@@ -43,6 +43,10 @@ var supportedLocales = ['ar',
 // NOTE: 'en' is not included in this list intentionally, since it's the fallback.
 'es-419',
 // Spanish, Latin American
+'fa',
+// Farsi
+'fa-ir',
+// Farsi, Iran
 'fr',
 // French
 'zh-cn',
@@ -65,16 +69,16 @@ var supportedLocales = ['ar',
 // Thai
 'uk' // Ukrainian
 ];
-
 var rtlLocales = ['ar',
 // Arabic
 'he',
 // Hebrew
 'fa',
 // Farsi (not currently supported)
+'fa-ir',
+// Farsi Iran
 'ur' // Urdu (not currently supported)
 ];
-
 var config = null;
 var loggingService = null;
 var messages = null;
@@ -180,7 +184,7 @@ export function getLocale(locale) {
   // Note that some browers prefer upper case for the region part of the locale, while others don't.
   // Thus the toLowerCase, for consistency.
   // https://developer.mozilla.org/en-US/docs/Web/API/NavigatorLanguage/language
-  return findSupportedLocale(global.navigator.language.toLowerCase());
+  return findSupportedLocale(globalThis.navigator.language.toLowerCase());
 }
 
 /**
@@ -213,9 +217,9 @@ export function isRtl(locale) {
  */
 export function handleRtl() {
   if (isRtl(getLocale())) {
-    global.document.getElementsByTagName('html')[0].setAttribute('dir', 'rtl');
+    globalThis.document.getElementsByTagName('html')[0].setAttribute('dir', 'rtl');
   } else {
-    global.document.getElementsByTagName('html')[0].setAttribute('dir', 'ltr');
+    globalThis.document.getElementsByTagName('html')[0].setAttribute('dir', 'ltr');
   }
 }
 var messagesShape = {
@@ -246,7 +250,6 @@ var messagesShape = {
   // Thai
   uk: PropTypes.objectOf(PropTypes.string) // Ukrainian
 };
-
 var optionsShape = {
   config: PropTypes.object.isRequired,
   loggingService: PropTypes.shape({
@@ -258,13 +261,14 @@ var optionsShape = {
 /**
  *
  *
- * @param {Array} [messagesArray=[]]
+ * @param {Object} newMessages
  * @returns {Object}
  * @memberof module:Internationalization
  */
-export function mergeMessages() {
-  var messagesArray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  return Array.isArray(messagesArray) ? merge.apply(void 0, [{}].concat(_toConsumableArray(messagesArray))) : {};
+export function mergeMessages(newMessages) {
+  var msgs = Array.isArray(newMessages) ? merge.apply(void 0, [{}].concat(_toConsumableArray(newMessages))) : newMessages;
+  messages = merge(messages, msgs);
+  return messages;
 }
 
 /**
@@ -285,21 +289,19 @@ export function configure(options) {
   loggingService = options.loggingService;
   // eslint-disable-next-line prefer-destructuring
   config = options.config;
-  messages = Array.isArray(options.messages) ? mergeMessages(options.messages) : options.messages;
+  messages = Array.isArray(options.messages) ? merge.apply(void 0, [{}].concat(_toConsumableArray(options.messages))) : options.messages;
   if (config.ENVIRONMENT !== 'production') {
     Object.keys(messages).forEach(function (key) {
       if (supportedLocales.indexOf(key) < 0) {
         console.warn("Unexpected locale: ".concat(key)); // eslint-disable-line no-console
       }
     });
-
     supportedLocales.forEach(function (key) {
       if (messages[key] === undefined) {
         console.warn("Missing locale: ".concat(key)); // eslint-disable-line no-console
       }
     });
   }
-
   handleRtl();
 }
 //# sourceMappingURL=lib.js.map

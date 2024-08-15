@@ -14,7 +14,9 @@ export default function OptionalReduxProvider(_ref) {
   }
   return /*#__PURE__*/React.createElement(Provider, {
     store: store
-  }, children);
+  }, /*#__PURE__*/React.createElement("div", {
+    "data-testid": "redux-provider"
+  }, children));
 }
 OptionalReduxProvider.propTypes = {
   store: PropTypes.object,

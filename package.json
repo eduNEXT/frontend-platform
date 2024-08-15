@@ -1,6 +1,6 @@
 {
   "name": "@edx/frontend-platform",
-  "version": "3.6.1-alpha",
+  "version": "8.0.50",
   "description": "Foundational application framework for Open edX micro-frontend applications.",
   "main": "index.js",
   "publishConfig": {
@@ -12,12 +12,14 @@
     "docs": "jsdoc -c jsdoc.json",
     "docs-watch": "nodemon -w src -w docs/template -w README.md -e js,jsx --exec npm run docs",
     "lint": "fedx-scripts eslint --ext .js --ext .jsx .",
+    "i18n_extract": "fedx-scripts formatjs extract",
     "snapshot": "fedx-scripts jest --updateSnapshot",
     "start": "fedx-scripts webpack-dev-server --progress",
     "test": "fedx-scripts jest --coverage",
     "test:watch": "npm run test -- --watch"
   },
   "bin": {
+    "intl-imports.js": "i18n/scripts/intl-imports.js",
     "transifex-utils.js": "i18n/scripts/transifex-utils.js"
   },
   "repository": {
@@ -31,30 +33,32 @@
   },
   "homepage": "https://github.com/openedx/frontend-platform#readme",
   "devDependencies": {
-    "@edx/browserslist-config": "1.1.1",
-    "@edx/brand": "npm:@edx/brand-openedx@1.2.0",
-    "@edx/frontend-build": "12.5.6",
-    "@edx/paragon": "^21.0.0-alpha.15",
-    "axios-mock-adapter": "1.21.2",
-    "core-js": "3.29.0",
-    "enzyme": "3.11.0",
-    "enzyme-adapter-react-16": "1.15.7",
+    "@edx/brand": "npm:@openedx/brand-openedx@^1.2.2",
+    "@edx/browserslist-config": "1.2.0",
+    "@openedx/frontend-build": "github:edunext/frontend-build#dcoa/design-tokens-support",
+    "@openedx/paragon": "22.6.1",
+    "@testing-library/jest-dom": "6.4.6",
+    "@testing-library/react": "12.1.5",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/user-event": "14.4.3",
+    "axios-mock-adapter": "^1.21.3",
+    "core-js": "3.37.1",
     "husky": "8.0.3",
-    "jsdoc": "3.6.11",
-    "nodemon": "2.0.20",
+    "jsdoc": "^4.0.0",
+    "nodemon": "3.1.4",
     "prop-types": "15.8.1",
-    "react": "16.14.0",
-    "react-dom": "16.14.0",
-    "react-redux": "7.2.9",
-    "react-router-dom": "5.3.4",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-redux": "^8.1.1",
+    "react-router-dom": "^6.6.1",
     "redux": "4.2.1",
-    "regenerator-runtime": "0.13.11"
+    "regenerator-runtime": "0.14.1"
   },
   "dependencies": {
-    "@cospired/i18n-iso-languages": "2.2.0",
+    "@cospired/i18n-iso-languages": "4.2.0",
     "@formatjs/intl-pluralrules": "4.3.3",
     "@formatjs/intl-relativetimeformat": "10.0.1",
-    "axios": "0.27.2",
+    "axios": "0.28.1",
     "axios-cache-interceptor": "0.10.7",
     "form-urlencoded": "4.1.4",
     "glob": "7.2.3",
@@ -68,16 +72,17 @@
     "lodash.merge": "4.6.2",
     "lodash.snakecase": "4.1.1",
     "pubsub-js": "1.9.4",
-    "react-intl": "^5.25.0",
+    "react-intl": "6.6.8",
     "universal-cookie": "4.0.4"
   },
   "peerDependencies": {
-    "@edx/paragon": ">= 10.0.0 < 22.0.0",
-    "prop-types": "^15.7.2",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-redux": "^7.1.1",
-    "react-router-dom": "^5.0.1",
+    "@openedx/frontend-build": ">= 14.0.0 || 13.1.4-alpha.1 ||>=13.0.0",
+    "@openedx/paragon": " 23.0.0-alpha.1 || >= 21.5.7 < 23.0.0",
+    "prop-types": ">=15.7.2 <16.0.0",
+    "react": "^16.9.0 || ^17.0.0",
+    "react-dom": "^16.9.0 || ^17.0.0",
+    "react-redux": "^7.1.1 || ^8.1.1",
+    "react-router-dom": "^6.0.0",
     "redux": "^4.0.4"
   }
 }

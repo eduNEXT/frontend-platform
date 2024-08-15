@@ -1,12 +1,12 @@
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { ensureDefinedConfig } from '../utils';
@@ -99,39 +99,128 @@ var MockAuthService = /*#__PURE__*/function () {
   function MockAuthService(options) {
     var _this = this;
     _classCallCheck(this, MockAuthService);
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * Gets the authenticated HTTP client instance, which is an axios client wrapped in
+     * MockAdapter from axios-mock-adapter.
+     *
+     * @returns {HttpClient} An HttpClient wrapped in MockAdapter.
+     */
     _defineProperty(this, "getAuthenticatedHttpClient", jest.fn(function () {
       return _this.authenticatedHttpClient;
     }));
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * Gets the unauthenticated HTTP client instance, which is an axios client wrapped in
+     * MockAdapter from axios-mock-adapter.
+     *
+     * @returns {HttpClient} An HttpClient wrapped in MockAdapter.
+     */
     _defineProperty(this, "getHttpClient", jest.fn(function () {
       return _this.httpClient;
     }));
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * Builds a URL to the login page with a post-login redirect URL attached as a query parameter.
+     *
+     * ```
+     * const url = getLoginRedirectUrl('http://localhost/mypage');
+     * console.log(url); // http://localhost/login?next=http%3A%2F%2Flocalhost%2Fmypage
+     * ```
+     *
+     * @param {string} redirectUrl The URL the user should be redirected to after logging in.
+     */
     _defineProperty(this, "getLoginRedirectUrl", jest.fn(function () {
       var redirectUrl = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _this.config.BASE_URL;
       return "".concat(_this.config.LOGIN_URL, "?next=").concat(encodeURIComponent(redirectUrl));
     }));
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * Redirects the user to the logout page in the real implementation.  Is a no-op here.
+     *
+     * @param {string} redirectUrl The URL the user should be redirected to after logging in.
+     */
     _defineProperty(this, "redirectToLogin", jest.fn(function () {
       var redirectUrl = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _this.config.BASE_URL;
       // Do nothing after getting the URL - this preserves the calls properly, but doesn't redirect.
       _this.getLoginRedirectUrl(redirectUrl);
     }));
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * Builds a URL to the logout page with a post-logout redirect URL attached as a query parameter.
+     *
+     * ```
+     * const url = getLogoutRedirectUrl('http://localhost/mypage');
+     * console.log(url); // http://localhost/logout?next=http%3A%2F%2Flocalhost%2Fmypage
+     * ```
+     *
+     * @param {string} redirectUrl The URL the user should be redirected to after logging out.
+     */
     _defineProperty(this, "getLogoutRedirectUrl", jest.fn(function () {
       var redirectUrl = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _this.config.BASE_URL;
       return "".concat(_this.config.LOGOUT_URL, "?redirect_url=").concat(encodeURIComponent(redirectUrl));
     }));
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * Redirects the user to the logout page in the real implementation.  Is a no-op here.
+     *
+     * @param {string} redirectUrl The URL the user should be redirected to after logging out.
+     */
     _defineProperty(this, "redirectToLogout", jest.fn(function () {
       var redirectUrl = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _this.config.BASE_URL;
       // Do nothing after getting the URL - this preserves the calls properly, but doesn't redirect.
       _this.getLogoutRedirectUrl(redirectUrl);
     }));
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * If it exists, returns the user data representing the currently authenticated user. If the
+     * user is anonymous, returns null.
+     *
+     * @returns {UserData|null}
+     */
     _defineProperty(this, "getAuthenticatedUser", jest.fn(function () {
       return _this.authenticatedUser;
     }));
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * Sets the authenticated user to the provided value.
+     *
+     * @param {UserData} authUser
+     */
     _defineProperty(this, "setAuthenticatedUser", jest.fn(function (authUser) {
       _this.authenticatedUser = authUser;
     }));
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * Returns the current authenticated user details, as supplied in the `authenticatedUser` field
+     * of the config options.  Resolves to null if the user is unauthenticated / the config option
+     * has not been set.
+     *
+     * @returns {UserData|null} Resolves to the user's access token if they are
+     * logged in.
+     */
     _defineProperty(this, "fetchAuthenticatedUser", jest.fn(function () {
       return _this.getAuthenticatedUser();
     }));
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * Ensures a user is authenticated. It will redirect to login when not authenticated.
+     *
+     * @param {string} [redirectUrl=config.BASE_URL] to return user after login when not
+     * authenticated.
+     * @returns {UserData|null} Resolves to the user's access token if they are
+     * logged in.
+     */
     _defineProperty(this, "ensureAuthenticatedUser", jest.fn(function () {
       var redirectUrl = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _this.config.BASE_URL;
       _this.fetchAuthenticatedUser();
@@ -141,6 +230,22 @@ var MockAuthService = /*#__PURE__*/function () {
       }
       return _this.getAuthenticatedUser();
     }));
+    /**
+     * A Jest mock function (jest.fn())
+     *
+     * Adds the user data supplied in the `hydratedAuthenticatedUser` config option into the object
+     * returned by `getAuthenticatedUser`.  This emulates the behavior of a real auth service which
+     * would make a request to fetch this data prior to merging it in.
+     *
+     * ```
+     * console.log(authenticatedUser); // Will be sparse and only contain basic information.
+     * await hydrateAuthenticatedUser()
+     * const authenticatedUser = getAuthenticatedUser();
+     * console.log(authenticatedUser); // Will contain additional user information
+     * ```
+     *
+     * @returns {Promise<null>}
+     */
     _defineProperty(this, "hydrateAuthenticatedUser", jest.fn(function () {
       var user = _this.getAuthenticatedUser();
       if (user !== null) {
@@ -168,7 +273,7 @@ var MockAuthService = /*#__PURE__*/function () {
    *
    * @param {Array} middleware Middleware to apply.
    */
-  _createClass(MockAuthService, [{
+  return _createClass(MockAuthService, [{
     key: "applyMiddleware",
     value: function applyMiddleware() {
       var middleware = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -183,17 +288,7 @@ var MockAuthService = /*#__PURE__*/function () {
         throw new Error("Failed to apply middleware: ".concat(error.message, "."));
       }
     }
-
-    /**
-     * A Jest mock function (jest.fn())
-     *
-     * Gets the authenticated HTTP client instance, which is an axios client wrapped in
-     * MockAdapter from axios-mock-adapter.
-     *
-     * @returns {HttpClient} An HttpClient wrapped in MockAdapter.
-     */
   }]);
-  return MockAuthService;
 }();
 export default MockAuthService;
 //# sourceMappingURL=MockAuthService.js.map
