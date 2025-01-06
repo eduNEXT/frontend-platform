@@ -1,21 +1,17 @@
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /**
  * NewRelic will not log an error if it is too long.
  *
  * @ignore
  */
-export var MAX_ERROR_LENGTH = 4000;
+export const MAX_ERROR_LENGTH = 4000;
 function fixErrorLength(error) {
   if (error.message && error.message.length > MAX_ERROR_LENGTH) {
-    var processedError = Object.create(error);
+    const processedError = Object.create(error);
     processedError.message = processedError.message.substring(0, MAX_ERROR_LENGTH);
     return processedError;
   }
@@ -26,8 +22,8 @@ function fixErrorLength(error) {
 }
 
 /* Constants used as New Relic page action names. */
-var pageActionNameInfo = 'INFO';
-var pageActionNameIgnoredError = 'IGNORED_ERROR';
+const pageActionNameInfo = 'INFO';
+const pageActionNameIgnoredError = 'IGNORED_ERROR';
 function sendPageAction(actionName, message, customAttributes) {
   if (process.env.NODE_ENV === 'development') {
     console.log(actionName, message, customAttributes); // eslint-disable-line
@@ -35,7 +31,7 @@ function sendPageAction(actionName, message, customAttributes) {
   if (window && typeof window.newrelic !== 'undefined') {
     // https://docs.newrelic.com/docs/browser/new-relic-browser/browser-apis/addpageaction/
     window.newrelic.addPageAction(actionName, _objectSpread({
-      message: message
+      message
     }, customAttributes));
   }
 }
@@ -48,7 +44,7 @@ function sendError(error, customAttributes) {
     window.newrelic.noticeError(fixErrorLength(error), customAttributes);
   }
 }
-function _setCustomAttribute(name, value) {
+function setCustomAttribute(name, value) {
   if (process.env.NODE_ENV === 'development') {
     console.log(name, value); // eslint-disable-line
   }
@@ -92,10 +88,9 @@ function _setCustomAttribute(name, value) {
  * @implements {LoggingService}
  * @memberof module:Logging
  */
-var NewRelicLoggingService = /*#__PURE__*/function () {
-  function NewRelicLoggingService(options) {
-    _classCallCheck(this, NewRelicLoggingService);
-    var config = options ? options.config : undefined;
+export default class NewRelicLoggingService {
+  constructor(options) {
+    const config = options ? options.config : undefined;
     /*
         String which is an explicit error message regex. If an error message matches the regex, the error
         is considered an *ignored* error and submitted to New Relic as a page action - not an error.
@@ -125,67 +120,59 @@ var NewRelicLoggingService = /*#__PURE__*/function () {
    * @param {*} [customAttributes={}]
    * @memberof NewRelicLoggingService
    */
-  return _createClass(NewRelicLoggingService, [{
-    key: "logInfo",
-    value: function logInfo(infoStringOrErrorObject) {
-      var customAttributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var message = infoStringOrErrorObject;
-      var customAttrs = customAttributes;
-      if (_typeof(infoStringOrErrorObject) === 'object' && 'message' in infoStringOrErrorObject) {
-        /* Caller has passed in an error object to be logged as a page action. */
-        /* Extract the attributes and the message. */
-        var infoCustomAttributes = infoStringOrErrorObject.customAttributes || {};
-        customAttrs = _objectSpread(_objectSpread({}, infoCustomAttributes), customAttributes);
-        message = infoStringOrErrorObject.message;
-      }
-      sendPageAction(pageActionNameInfo, message, customAttrs);
+  logInfo(infoStringOrErrorObject) {
+    let customAttributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    let message = infoStringOrErrorObject;
+    let customAttrs = customAttributes;
+    if (typeof infoStringOrErrorObject === 'object' && 'message' in infoStringOrErrorObject) {
+      /* Caller has passed in an error object to be logged as a page action. */
+      /* Extract the attributes and the message. */
+      const infoCustomAttributes = infoStringOrErrorObject.customAttributes || {};
+      customAttrs = _objectSpread(_objectSpread({}, infoCustomAttributes), customAttributes);
+      message = infoStringOrErrorObject.message;
+    }
+    sendPageAction(pageActionNameInfo, message, customAttrs);
+  }
+
+  /**
+   *
+   *
+   * @param {*} errorStringOrObject
+   * @param {*} [customAttributes={}]
+   * @memberof NewRelicLoggingService
+   */
+  logError(errorStringOrObject) {
+    let customAttributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    const errorCustomAttributes = errorStringOrObject.customAttributes || {};
+    let allCustomAttributes = _objectSpread(_objectSpread({}, errorCustomAttributes), customAttributes);
+    if (Object.keys(allCustomAttributes).length === 0) {
+      // noticeError expects undefined if there are no custom attributes.
+      allCustomAttributes = undefined;
     }
 
-    /**
-     *
-     *
-     * @param {*} errorStringOrObject
-     * @param {*} [customAttributes={}]
-     * @memberof NewRelicLoggingService
-     */
-  }, {
-    key: "logError",
-    value: function logError(errorStringOrObject) {
-      var customAttributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var errorCustomAttributes = errorStringOrObject.customAttributes || {};
-      var allCustomAttributes = _objectSpread(_objectSpread({}, errorCustomAttributes), customAttributes);
-      if (Object.keys(allCustomAttributes).length === 0) {
-        // noticeError expects undefined if there are no custom attributes.
-        allCustomAttributes = undefined;
-      }
-
-      /*
-          Separate the errors into ignored errors and other errors.
-          Ignored errors are logged via adding a page action.
-          Other errors are logged via noticeError and count as "JS Errors" for the application.
-      */
-      var errorMessage = errorStringOrObject.message || (typeof errorStringOrObject === 'string' ? errorStringOrObject : '');
-      if (this.ignoredErrorRegexes && errorMessage.match(this.ignoredErrorRegexes)) {
-        /* ignored error */
-        sendPageAction(pageActionNameIgnoredError, errorMessage, allCustomAttributes);
-      } else {
-        /*  error! */
-        sendError(errorStringOrObject, allCustomAttributes);
-      }
+    /*
+        Separate the errors into ignored errors and other errors.
+        Ignored errors are logged via adding a page action.
+        Other errors are logged via noticeError and count as "JS Errors" for the application.
+    */
+    const errorMessage = errorStringOrObject.message || (typeof errorStringOrObject === 'string' ? errorStringOrObject : '');
+    if (this.ignoredErrorRegexes && errorMessage.match(this.ignoredErrorRegexes)) {
+      /* ignored error */
+      sendPageAction(pageActionNameIgnoredError, errorMessage, allCustomAttributes);
+    } else {
+      /*  error! */
+      sendError(errorStringOrObject, allCustomAttributes);
     }
+  }
 
-    /**
-     * Sets a custom attribute that will be included with all subsequent log messages.
-     *
-     * @param {string} name
-     * @param {string|number|null} value
-     */
-  }, {
-    key: "setCustomAttribute",
-    value: function setCustomAttribute(name, value) {
-      _setCustomAttribute(name, value);
-    }
-  }]);
-}();
-export { NewRelicLoggingService as default };
+  /**
+   * Sets a custom attribute that will be included with all subsequent log messages.
+   *
+   * @param {string} name
+   * @param {string|number|null} value
+   */
+  setCustomAttribute(name, value) {
+    setCustomAttribute(name, value);
+  }
+}
 //# sourceMappingURL=NewRelicLoggingService.js.map

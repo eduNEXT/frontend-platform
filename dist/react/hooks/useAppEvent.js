@@ -12,12 +12,10 @@ import { subscribe, unsubscribe } from '../../pubSub';
  * @param {string} type
  * @param {function} callback
  */
-var useAppEvent = function useAppEvent(type, callback) {
-  useEffect(function () {
-    var subscriptionToken = subscribe(type, callback);
-    return function () {
-      return unsubscribe(subscriptionToken);
-    };
+const useAppEvent = (type, callback) => {
+  useEffect(() => {
+    const subscriptionToken = subscribe(type, callback);
+    return () => unsubscribe(subscriptionToken);
   }, [callback, type]);
 };
 export default useAppEvent;

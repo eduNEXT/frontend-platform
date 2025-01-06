@@ -27,14 +27,14 @@
  */
 
 import PropTypes from 'prop-types';
-var optionsShape = {
+const optionsShape = {
   config: PropTypes.object.isRequired
 };
-var serviceShape = {
+const serviceShape = {
   logInfo: PropTypes.func.isRequired,
   logError: PropTypes.func.isRequired
 };
-var service = null;
+let service = null;
 
 /**
  *

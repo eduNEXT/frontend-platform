@@ -134,8 +134,8 @@ function extractRegex(envVar) {
   }
   return undefined;
 }
-var ENVIRONMENT = process.env.NODE_ENV;
-var config = {
+const ENVIRONMENT = process.env.NODE_ENV;
+let config = {
   ACCESS_TOKEN_COOKIE_NAME: process.env.ACCESS_TOKEN_COOKIE_NAME,
   ACCOUNT_PROFILE_URL: process.env.ACCOUNT_PROFILE_URL,
   ACCOUNT_SETTINGS_URL: process.env.ACCOUNT_SETTINGS_URL,
@@ -146,7 +146,7 @@ var config = {
   DISCOVERY_API_BASE_URL: process.env.DISCOVERY_API_BASE_URL,
   PUBLISHER_BASE_URL: process.env.PUBLISHER_BASE_URL,
   ECOMMERCE_BASE_URL: process.env.ECOMMERCE_BASE_URL,
-  ENVIRONMENT: ENVIRONMENT,
+  ENVIRONMENT,
   IGNORED_ERROR_REGEX: extractRegex(process.env.IGNORED_ERROR_REGEX),
   LANGUAGE_PREFERENCE_COOKIE_NAME: process.env.LANGUAGE_PREFERENCE_COOKIE_NAME,
   LEARNING_BASE_URL: process.env.LEARNING_BASE_URL,
@@ -260,12 +260,12 @@ export function mergeConfig(newConfig) {
  * @param {string} [requester='unspecified application code']
  */
 export function ensureConfig(keys) {
-  var requester = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'unspecified application code';
-  subscribe(APP_CONFIG_INITIALIZED, function () {
-    keys.forEach(function (key) {
+  let requester = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'unspecified application code';
+  subscribe(APP_CONFIG_INITIALIZED, () => {
+    keys.forEach(key => {
       if (config[key] === undefined) {
         // eslint-disable-next-line no-console
-        console.warn("App configuration error: ".concat(key, " is required by ").concat(requester, "."));
+        console.warn(`App configuration error: ${key} is required by ${requester}.`);
       }
     });
   });
