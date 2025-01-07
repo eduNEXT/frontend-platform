@@ -7,10 +7,8 @@ import { Provider } from 'react-redux';
  * @param {Object} props
  */
 export default function OptionalReduxProvider(_ref) {
-  let {
-    store,
-    children
-  } = _ref;
+  var store = _ref.store,
+    children = _ref.children;
   if (store === null) {
     return children;
   }

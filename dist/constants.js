@@ -1,6 +1,6 @@
 /** @constant */
-export const APP_TOPIC = 'APP';
-export const APP_PUBSUB_INITIALIZED = `${APP_TOPIC}.PUBSUB_INITIALIZED`;
+export var APP_TOPIC = 'APP';
+export var APP_PUBSUB_INITIALIZED = "".concat(APP_TOPIC, ".PUBSUB_INITIALIZED");
 
 /**
  * Event published when the application initialization sequence has finished loading any dynamic
@@ -8,7 +8,7 @@ export const APP_PUBSUB_INITIALIZED = `${APP_TOPIC}.PUBSUB_INITIALIZED`;
  *
  * @event
  */
-export const APP_CONFIG_INITIALIZED = `${APP_TOPIC}.CONFIG_INITIALIZED`;
+export var APP_CONFIG_INITIALIZED = "".concat(APP_TOPIC, ".CONFIG_INITIALIZED");
 
 /**
  * Event published when the application initialization sequence has finished determining the user's
@@ -16,7 +16,7 @@ export const APP_CONFIG_INITIALIZED = `${APP_TOPIC}.CONFIG_INITIALIZED`;
  *
  * @event
  */
-export const APP_AUTH_INITIALIZED = `${APP_TOPIC}.AUTH_INITIALIZED`;
+export var APP_AUTH_INITIALIZED = "".concat(APP_TOPIC, ".AUTH_INITIALIZED");
 
 /**
  * Event published when the application initialization sequence has finished initializing
@@ -24,7 +24,7 @@ export const APP_AUTH_INITIALIZED = `${APP_TOPIC}.AUTH_INITIALIZED`;
  *
  * @event
  */
-export const APP_I18N_INITIALIZED = `${APP_TOPIC}.I18N_INITIALIZED`;
+export var APP_I18N_INITIALIZED = "".concat(APP_TOPIC, ".I18N_INITIALIZED");
 
 /**
  * Event published when the application initialization sequence has finished initializing the
@@ -32,7 +32,7 @@ export const APP_I18N_INITIALIZED = `${APP_TOPIC}.I18N_INITIALIZED`;
  *
  * @event
  */
-export const APP_LOGGING_INITIALIZED = `${APP_TOPIC}.LOGGING_INITIALIZED`;
+export var APP_LOGGING_INITIALIZED = "".concat(APP_TOPIC, ".LOGGING_INITIALIZED");
 
 /**
  * Event published when the application initialization sequence has finished initializing the
@@ -40,7 +40,7 @@ export const APP_LOGGING_INITIALIZED = `${APP_TOPIC}.LOGGING_INITIALIZED`;
  *
  * @event
  */
-export const APP_ANALYTICS_INITIALIZED = `${APP_TOPIC}.ANALYTICS_INITIALIZED`;
+export var APP_ANALYTICS_INITIALIZED = "".concat(APP_TOPIC, ".ANALYTICS_INITIALIZED");
 
 /**
  * Event published when the application initialization sequence has finished.  Applications should
@@ -48,7 +48,7 @@ export const APP_ANALYTICS_INITIALIZED = `${APP_TOPIC}.ANALYTICS_INITIALIZED`;
  *
  * @event
  */
-export const APP_READY = `${APP_TOPIC}.READY`;
+export var APP_READY = "".concat(APP_TOPIC, ".READY");
 
 /**
  * Event published when the application initialization sequence has aborted.  This is frequently
@@ -57,9 +57,9 @@ export const APP_READY = `${APP_TOPIC}.READY`;
  * @see {@link module:React~ErrorPage}
  * @event
  */
-export const APP_INIT_ERROR = `${APP_TOPIC}.INIT_ERROR`;
+export var APP_INIT_ERROR = "".concat(APP_TOPIC, ".INIT_ERROR");
 
 /** @constant */
-export const CONFIG_TOPIC = 'CONFIG';
-export const CONFIG_CHANGED = `${CONFIG_TOPIC}.CHANGED`;
+export var CONFIG_TOPIC = 'CONFIG';
+export var CONFIG_CHANGED = "".concat(CONFIG_TOPIC, ".CHANGED");
 //# sourceMappingURL=constants.js.map

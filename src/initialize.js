@@ -46,7 +46,6 @@
  */
 
 import { createBrowserHistory, createMemoryHistory } from 'history';
-console.debug('testttttttttt');
 /*
 This 'env.config' package is a special 'magic' alias in our webpack configuration in frontend-build.
 It points at an `env.config.js` file in the root of an MFE's repository if it exists and falls back
