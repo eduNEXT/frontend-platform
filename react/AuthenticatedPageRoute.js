@@ -22,15 +22,12 @@ import { getLoginRedirectUrl } from '../auth';
  * viewing the route's contents.
  */
 export default function AuthenticatedPageRoute(_ref) {
-  let {
-    redirectUrl,
-    children
-  } = _ref;
-  const {
-    authenticatedUser
-  } = useContext(AppContext);
+  var redirectUrl = _ref.redirectUrl,
+    children = _ref.children;
+  var _useContext = useContext(AppContext),
+    authenticatedUser = _useContext.authenticatedUser;
   if (authenticatedUser === null) {
-    const destination = redirectUrl || getLoginRedirectUrl(global.location.href);
+    var destination = redirectUrl || getLoginRedirectUrl(global.location.href);
     global.location.assign(destination);
     return null;
   }

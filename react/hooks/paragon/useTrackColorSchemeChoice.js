@@ -7,24 +7,23 @@ import { sendTrackEvent } from '../../../analytics';
  *
  * @memberof module:React
  */
-const useTrackColorSchemeChoice = () => {
-  useEffect(() => {
-    const trackColorSchemeChoice = _ref => {
-      let {
-        matches
-      } = _ref;
-      const preferredColorScheme = matches ? 'dark' : 'light';
+var useTrackColorSchemeChoice = function useTrackColorSchemeChoice() {
+  useEffect(function () {
+    var _window$matchMedia, _window;
+    var trackColorSchemeChoice = function trackColorSchemeChoice(_ref) {
+      var matches = _ref.matches;
+      var preferredColorScheme = matches ? 'dark' : 'light';
       sendTrackEvent('openedx.ui.frontend-platform.prefers-color-scheme.selected', {
-        preferredColorScheme
+        preferredColorScheme: preferredColorScheme
       });
     };
-    const colorSchemeQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
+    var colorSchemeQuery = (_window$matchMedia = (_window = window).matchMedia) === null || _window$matchMedia === void 0 ? void 0 : _window$matchMedia.call(_window, '(prefers-color-scheme: dark)');
     if (colorSchemeQuery) {
       // send user's initial choice
       trackColorSchemeChoice(colorSchemeQuery);
       colorSchemeQuery.addEventListener('change', trackColorSchemeChoice);
     }
-    return () => {
+    return function () {
       if (colorSchemeQuery) {
         colorSchemeQuery.removeEventListener('change', trackColorSchemeChoice);
       }

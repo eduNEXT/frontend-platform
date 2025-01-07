@@ -16,7 +16,7 @@ import React from 'react';
  * `AppContext` is used in a React application like any other `[React Context](https://reactjs.org/docs/context.html)
  * @memberof module:React
  */
-const AppContext = /*#__PURE__*/React.createContext({
+var AppContext = /*#__PURE__*/React.createContext({
   authenticatedUser: null,
   config: {}
 });

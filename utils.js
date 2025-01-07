@@ -1,3 +1,13 @@
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 /**
  * #### Import members from **@edx/frontend-platform**
  *
@@ -38,17 +48,21 @@ import snakeCase from 'lodash.snakecase';
  */
 export function modifyObjectKeys(object, modify) {
   // If the passed in object is not an Object, return it.
-  if (object === undefined || object === null || typeof object !== 'object' && !Array.isArray(object)) {
+  if (object === undefined || object === null || _typeof(object) !== 'object' && !Array.isArray(object)) {
     return object;
   }
   if (Array.isArray(object)) {
-    return object.map(value => modifyObjectKeys(value, modify));
+    return object.map(function (value) {
+      return modifyObjectKeys(value, modify);
+    });
   }
 
   // Otherwise, process all its keys.
-  const result = {};
-  Object.entries(object).forEach(_ref => {
-    let [key, value] = _ref;
+  var result = {};
+  Object.entries(object).forEach(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+      key = _ref2[0],
+      value = _ref2[1];
     result[modify(key)] = modifyObjectKeys(value, modify);
   });
   return result;
@@ -113,7 +127,9 @@ export function snakeCaseObject(object) {
  * @returns {Array|Object}
  */
 export function convertKeyNames(object, nameMap) {
-  const transformer = key => nameMap[key] === undefined ? key : nameMap[key];
+  var transformer = function transformer(key) {
+    return nameMap[key] === undefined ? key : nameMap[key];
+  };
   return modifyObjectKeys(object, transformer);
 }
 
@@ -134,7 +150,7 @@ export function convertKeyNames(object, nameMap) {
  */
 export function parseURL(url) {
   if (typeof document !== 'undefined') {
-    const parser = document.createElement('a');
+    var parser = document.createElement('a');
     parser.href = url;
     return parser;
   }
@@ -149,7 +165,8 @@ export function parseURL(url) {
  * @returns {string}
  */
 export function getPath(url) {
-  return typeof document !== 'undefined' ? parseURL(url)?.pathname : '';
+  var _parseURL;
+  return typeof document !== 'undefined' ? (_parseURL = parseURL(url)) === null || _parseURL === void 0 ? void 0 : _parseURL.pathname : '';
 }
 
 /**
@@ -162,15 +179,15 @@ export function getPath(url) {
  * @returns {Object}
  */
 export function getQueryParameters() {
-  let search = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : global.location.search;
-  const keyValueFragments = search.slice(search.indexOf('?') + 1).split('&').filter(hash => hash !== '');
-  return keyValueFragments.reduce((params, keyValueFragment) => {
-    const split = keyValueFragment.indexOf('=');
-    const key = keyValueFragment.slice(0, split);
-    const value = keyValueFragment.slice(split + 1);
-    return Object.assign(params, {
-      [key]: decodeURIComponent(value)
-    });
+  var search = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : global.location.search;
+  var keyValueFragments = search.slice(search.indexOf('?') + 1).split('&').filter(function (hash) {
+    return hash !== '';
+  });
+  return keyValueFragments.reduce(function (params, keyValueFragment) {
+    var split = keyValueFragment.indexOf('=');
+    var key = keyValueFragment.slice(0, split);
+    var value = keyValueFragment.slice(split + 1);
+    return Object.assign(params, _defineProperty({}, key, decodeURIComponent(value)));
   }, {});
 }
 
@@ -187,10 +204,10 @@ export function getQueryParameters() {
  * Used when throwing errors to aid in debugging.
  */
 export function ensureDefinedConfig(object, requester) {
-  Object.keys(object).forEach(key => {
+  Object.keys(object).forEach(function (key) {
     if (object[key] === undefined) {
       // eslint-disable-next-line no-console
-      console.warn(`Module configuration error: ${key} is required by ${requester}.`);
+      console.warn("Module configuration error: ".concat(key, " is required by ").concat(requester, "."));
     }
   });
 }
