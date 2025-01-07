@@ -12,9 +12,11 @@ import { sendPageEvent } from '../analytics';
  * @param {Object} props
  */
 export default function PageWrap(_ref) {
-  var children = _ref.children;
-  var location = useLocation();
-  useEffect(function () {
+  let {
+    children
+  } = _ref;
+  const location = useLocation();
+  useEffect(() => {
     sendPageEvent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);

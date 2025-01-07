@@ -9,7 +9,7 @@ import { redirectToLogin } from '../auth';
  * @memberof module:React
  */
 export default function LoginRedirect() {
-  useEffect(function () {
+  useEffect(() => {
     redirectToLogin(global.location.href);
   }, []);
   return null;

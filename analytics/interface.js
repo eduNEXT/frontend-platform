@@ -26,7 +26,7 @@
  * @module Analytics
  */
 import PropTypes from 'prop-types';
-var optionsShape = {
+const optionsShape = {
   config: PropTypes.object.isRequired,
   httpClient: PropTypes.oneOfType([PropTypes.func, PropTypes.object]).isRequired,
   loggingService: PropTypes.shape({
@@ -34,14 +34,14 @@ var optionsShape = {
     logInfo: PropTypes.func.isRequired
   }).isRequired
 };
-var serviceShape = {
+const serviceShape = {
   sendTrackingLogEvent: PropTypes.func.isRequired,
   identifyAuthenticatedUser: PropTypes.func.isRequired,
   identifyAnonymousUser: PropTypes.func.isRequired,
   sendTrackEvent: PropTypes.func.isRequired,
   sendPageEvent: PropTypes.func.isRequired
 };
-var service;
+let service;
 
 /**
  *
